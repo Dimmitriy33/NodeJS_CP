@@ -17,17 +17,30 @@
       ],
       "member-ordering": [
         true,
-        "public-before-private",
-        "static-before-instance",
-        "variables-before-functions"
-      ],
-      "prefer-readonly": true,
-      "adjacent-overload-signatures": [
-        true,
         {
-          "ignore-accessors": true
+            "order": [
+                "public-static-field",
+                "public-static-method",
+                "public-instance-field",
+                "public-constructor",
+                "public-instance-method",
+    
+                "protected-static-field",
+                "protected-static-method",
+                "protected-instance-field",
+                "protected-constructor",
+                "protected-instance-method",
+    
+                "private-static-field",
+                "private-static-method",
+                "private-instance-field",
+                "private-constructor",
+                "private-instance-method"
+            ]
         }
-      ],
+    ],
+      "prefer-readonly": true,
+      "adjacent-overload-signatures": true,
       "unified-signatures": true,
       "prefer-function-over-method": [
         true,
@@ -88,12 +101,7 @@
       "no-promise-as-boolean": true,
       "prefer-const": true,
       "no-var-keyword": true,
-      "no-shadowed-variable": [
-        true,
-        {
-          "temporalDeadZone": false
-        }
-      ],
+      "no-shadowed-variable": true,
       "one-variable-per-declaration": [
         true,
         "ignore-for-loop"
@@ -194,8 +202,7 @@
         "allow-string",
         "allow-enum",
         "allow-number",
-        "allow-mix",
-        "allow-rhs"
+        "allow-mix"
       ],
       "prefer-while": true,
       "prefer-for-of": true,
@@ -269,7 +276,6 @@
           "constructor": "never"
         }
       ],
-      "space-within-parens": 0,
       "import-spacing": true,
       "no-trailing-whitespace": true,
       "newline-before-return": true,
