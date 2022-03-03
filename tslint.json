@@ -69,7 +69,7 @@
       ],
       "return-undefined": true,
       "no-arg": true,
-      "only-arrow-functions": true,
+      "only-arrow-functions": false,
       "arrow-parens": [
         true,
         "ban-single-arg-parens"
@@ -120,7 +120,7 @@
       ],
       "no-require-imports": true,
       "no-default-import": true,
-      "no-default-export": true,
+      "no-default-export": false,
       "no-reference": true,
       "typedef": [
         true,
@@ -305,10 +305,6 @@
           "singleline": "never",
           "esSpecCompliant": true
         }
-      ],
-      "file-name-casing": [
-        true,
-        "kebab-case"
       ],
       "class-name": true,
       "interface-name": [

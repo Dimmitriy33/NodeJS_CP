@@ -1,11 +1,38 @@
 {
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.wordWrap": "on",
+    "editor.renderWhitespace": "all",
+  },
     "[typescript]": {
       "editor.formatOnSave": true,
       "editor.formatOnPaste": true
     },
-    "[markdown]": {
+    "[javascript]": {
       "editor.formatOnSave": true,
+      "editor.formatOnPaste": true,
       "editor.wordWrap": "on",
       "editor.renderWhitespace": "all",
-    }
+    },
+    "[html]": {
+      "editor.formatOnSave": true,
+      "editor.formatOnPaste": true,
+      "editor.wordWrap": "on",
+      "editor.renderWhitespace": "all",
+    },
+    "[css]": {
+      "editor.formatOnSave": true,
+      "editor.formatOnPaste": true,
+      "editor.wordWrap": "on",
+      "editor.renderWhitespace": "all",
+    },
+    "[scss]": {
+      "editor.formatOnSave": true,
+      "editor.formatOnPaste": true,
+      "editor.wordWrap": "on",
+      "editor.renderWhitespace": "all",
+    },
+    
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active"
   }
