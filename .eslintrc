@@ -1,0 +1,57 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": ["error"],
+    "semi": ["error", "always"],
+    "object-curly-spacing": ["error", "always"],
+    "camelcase": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": 1,
+    "@typescript-eslint/no-inferrable-types": [
+      "warn",
+      {
+        "ignoreParameters": true
+      }
+    ],
+    "no-underscore-dangle": "off",
+    "no-shadow": "off",
+    "no-new": 0,
+    "max-len": ["error", {
+      "code": 80,
+      "template": 80,
+      "tabWidth": 2,
+      "comments": 80,
+      "ignorePattern": "",
+      "ignoreComments": false,
+      "ignoreTrailingComments": false,
+      "ignoreUrls": false,
+      "ignoreStrings": false,
+      "ignoreTemplateLiterals": false,
+      "ignoreRegExpLiterals": false,
+      "ignoreHTMLAttributeValues": false,
+      "ignoreHTMLTextContents": false
+  }],
+    "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/no-unused-vars": "warn",
+    "quotes": [2, "single", { "avoidEscape": true }],
+    "class-methods-use-this": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
+  }
+}
