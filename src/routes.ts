@@ -9,4 +9,5 @@ export default function routes(app: Express): void {
     });
 
     app.post('/api/users', validate(createUserValidationSchema), createUserHandler);
+    // app.post('/api/sessions', validate(createSessionValidationSchema), createSessionHandler);
 }

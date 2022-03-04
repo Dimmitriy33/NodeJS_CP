@@ -49,9 +49,9 @@ userSchema.methods.comparePassword = async function(inPass: string): Promise<boo
   const user = this as UserDocument;
   return bcrypt
         .compare(inPass, user.password)
-        .catch((e) => false);
+        .catch(() => false);
 }
 
 // tslint:disable-next-line: variable-name
-const UserModel = mongoose.model('User', userSchema);
+const UserModel = mongoose.model<UserDocument>('User', userSchema);
 export default UserModel;

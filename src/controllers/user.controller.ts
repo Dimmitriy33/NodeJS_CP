@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
-import { omit } from 'lodash';
 import { createUser } from '../services/user.service';
 import Logger from '../utils/logger';
 import { CreateUserInput } from '../utils/validation/user.validation';
 
-export async function createUserHandler(req: Request<null, null , CreateUserInput["body"]>, res: Response) {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export async function createUserHandler(req: Request<{}, {} , CreateUserInput["body"]>, res: Response) {
   try {
     const user = await createUser(req.body);
-    //omit required to remove password from response body
-    return res.send(omit(user.toJSON(), "password"));
+    return res.send(user);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     Logger.error(err);
