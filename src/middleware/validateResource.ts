@@ -11,11 +11,12 @@ export default function validate(schema: AnyZodObject)
                 params: req.params,
                 query: req.query
             });
-        } catch (err: any) {
+            next();
+        } catch (err) {
             return res
             .status(400)
             .send({
-                error: err.errors
+                error: err
             });
         }
     };
