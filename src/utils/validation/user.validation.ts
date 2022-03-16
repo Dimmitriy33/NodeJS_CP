@@ -23,7 +23,7 @@ export const createUserValidationSchema = object({
   }).refine((data) => data.password === data.passwordConfirmation, {
     message: "Password and confirmPassword do not match",
     path: ["passwordConfirmation"],
-  }),
+  })
 });
 
 export type CreateUserInput = Omit<

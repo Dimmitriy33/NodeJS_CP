@@ -69,7 +69,7 @@
       "interface-over-type-literal": true,
       "function-constructor": true,
       "no-parameter-reassignment": true,
-      "no-void-expression": true,
+      "no-void-expression": false,
       "invalid-void": [
         true,
         {
@@ -127,7 +127,7 @@
         "rxjs/Rx"
       ],
       "no-require-imports": true,
-      "no-default-import": true,
+      "no-default-import": false,
       "no-default-export": false,
       "no-reference": true,
       "typedef": [
@@ -137,11 +137,11 @@
       ],
       "no-inferrable-types": true,
       "use-default-type-parameter": true,
-      "no-object-literal-type-assertion": true,
+      "no-object-literal-type-assertion": false,
       "no-angle-bracket-type-assertion": true,
       "no-unnecessary-type-assertion": true,
       "callable-types": true,
-      "no-null-keyword": true,
+      "no-null-keyword": false,
       "no-null-undefined-union": true,
       "no-non-null-assertion": true,
       "array-type": [
@@ -195,14 +195,6 @@
         {
           "allow-else-if": true
         }
-      ],
-      "strict-boolean-expressions": [
-        true,
-        "allow-undefined-union",
-        "allow-string",
-        "allow-enum",
-        "allow-number",
-        "allow-mix"
       ],
       "prefer-while": true,
       "prefer-for-of": true,
@@ -278,7 +270,7 @@
       ],
       "import-spacing": true,
       "no-trailing-whitespace": true,
-      "newline-before-return": true,
+      "newline-before-return": false,
       "newline-per-chained-call": true,
       "one-line": [
         true,
@@ -314,7 +306,7 @@
       ],
       "class-name": true,
       "interface-name": [
-        true,
+        false,
         "never-prefix"
       ],
       "variable-name": [

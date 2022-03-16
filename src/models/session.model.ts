@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { UserDocument } from './user.model';
 
 export interface SessionDocument extends mongoose.Document {
-  user: UserDocument["_id"];
+  user: UserDocument['_id'];
   isValid: boolean;
   userAgent: string;
   createdAt: Date; // related to timestamps
@@ -16,9 +16,9 @@ const sessionSchema = new mongoose.Schema({
   },
   isValid: {
     type: Boolean,
-    default: true,
+    default: true
   },
-  // to store user browser 
+  // to store user browser
   userAgent: {
     type: String
   }

@@ -1,9 +1,9 @@
-import config from "config";
-import jwt from "jsonwebtoken";
+import config from 'config';
+import jwt from 'jsonwebtoken';
 
 // types
 
-  interface IVerifyModel {
+interface IVerifyModel {
     isValid: boolean;
     expired: boolean;
     decoded: string | jwt.JwtPayload | null;
@@ -11,8 +11,8 @@ import jwt from "jsonwebtoken";
 
 //
 
-const privateKey = config.get<string>("privateJWTKey");
-const publicKey = config.get<string>("publicJWTKey");
+const privateKey = config.get<string>('privateJWTKey');
+const publicKey = config.get<string>('publicJWTKey');
 
 export function signJWT(
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -20,10 +20,11 @@ export function signJWT(
   options?: jwt.SignOptions | undefined
 ) {
   return jwt.sign(object, privateKey, {
+    // tslint:disable-next-line: no-tautology-expression
     ...(options && options),
-    //allow us to use public and private keys
-    algorithm: "RS256"
-  })
+    // allow us to use public and private keys
+    algorithm: 'RS256'
+  });
 }
 
 export function verifyJWT(token: string) {
@@ -35,10 +36,10 @@ export function verifyJWT(token: string) {
       decoded
     } as IVerifyModel;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch(error: any) {
+  } catch (error: any) {
     return {
       isValid: false,
-      expired: error.message === "jwt expired",
+      expired: error.message === 'jwt expired',
       decoded: null
     } as IVerifyModel;
   }
