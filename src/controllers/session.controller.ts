@@ -3,7 +3,7 @@
 // tslint:disable quotemark
 import config from 'config';
 import { Request, Response } from 'express';
-import { createSession, findSessions } from '../services/session.service';
+import { createSession, findSessions, updateSession } from '../services/session.service';
 import validatePass from '../services/user.service';
 import { signJWT } from '../utils/jwt';
 
@@ -58,4 +58,20 @@ export async function getUserSessionsHandler(req: Request, res: Response) {
   });
 
   return res.send(sessions);
+}
+
+export async function deleteSessionHandler(req: Request, res: Response) {
+  // const userId = res.locals.user._id;
+  const sessionId = res.locals.user.session;
+
+  if (!sessionId) {
+    return res.sendStatus(404);
+  }
+
+  await updateSession({ _id: sessionId }, { valid: false });
+
+  return res.send({
+    accessToken: null,
+    refreshToken: null
+  });
 }

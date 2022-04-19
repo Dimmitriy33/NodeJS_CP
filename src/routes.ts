@@ -1,5 +1,5 @@
 import { Express, Request, Response } from 'express';
-import { createSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
+import { createSessionHandler, deleteSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
 import { createUserHandler } from './controllers/user.controller';
 import requireUser from './middleware/requireUser';
 import validate from './middleware/validateResource';
@@ -14,4 +14,5 @@ export default function routes(app: Express): void {
     app.post('/api/users', validate(createUserValidationSchema), createUserHandler);
     app.get('/api/sessions', requireUser, getUserSessionsHandler);
     app.post('/api/sessions', validate(createSessionValidationSchema), createSessionHandler);
+    app.delete('/api/sessions', requireUser, deleteSessionHandler);
 }
