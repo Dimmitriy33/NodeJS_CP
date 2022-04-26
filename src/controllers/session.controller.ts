@@ -1,6 +1,6 @@
-// tslint:disable-next-line: comment-type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// tslint:disable quotemark
+// tslint:disable use-default-type-parameter
+
 import config from 'config';
 import { Request, Response } from 'express';
 import { createSession, findSessions, updateSession } from '../services/session.service';
@@ -8,7 +8,6 @@ import validatePass from '../services/user.service';
 import { signJWT } from '../utils/jwt';
 
 export async function createSessionHandler(req: Request, res: Response)
-  // tslint:disable-next-line: use-default-type-parameter
   : Promise<Response<any, Record<string, any>>> {
 
   const user = await validatePass(req.body);
@@ -19,7 +18,7 @@ export async function createSessionHandler(req: Request, res: Response)
       .send('Invalid email or password');
   }
 
-  let userAgent = req.get('user-agent') || "";
+  let userAgent = req.get('user-agent') || '';
 
   // just for test to skip error
   if (userAgent === 'PostmanRuntime/7.28.4') {
@@ -40,7 +39,7 @@ export async function createSessionHandler(req: Request, res: Response)
       ...user,
       session: session._id
     }, {
-      expiresIn: config.get<string>('accessTokenTtl') // 15min
+      expiresIn: config.get<string>('refreshTokenTtl')
     }
   );
 
@@ -50,7 +49,8 @@ export async function createSessionHandler(req: Request, res: Response)
   });
 }
 
-export async function getUserSessionsHandler(req: Request, res: Response) {
+export async function getUserSessionsHandler(_req: Request, res: Response)
+: Promise<Response<any, Record<string, any>>> {
   const userId = res.locals.user._id;
   const sessions = await findSessions({
     user: userId,
@@ -60,7 +60,8 @@ export async function getUserSessionsHandler(req: Request, res: Response) {
   return res.send(sessions);
 }
 
-export async function deleteSessionHandler(req: Request, res: Response) {
+export async function deleteSessionHandler(_req: Request, res: Response)
+: Promise<Response<any>> {
   // const userId = res.locals.user._id;
   const sessionId = res.locals.user.session;
 

@@ -27,5 +27,5 @@ const sessionSchema = new mongoose.Schema({
 });
 
 // tslint:disable-next-line: variable-name
-const SessionModel = mongoose.model('Session', sessionSchema);
+const SessionModel = mongoose.model<SessionDocument>('Session', sessionSchema);
 export default SessionModel;
