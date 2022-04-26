@@ -112,7 +112,7 @@
       ],
       "no-unnecessary-initializer": true,
       "no-implicit-dependencies": true,
-      "no-import-side-effect": true,
+      "no-import-side-effect": false,
       "ordered-imports": [
         true,
         {
@@ -271,7 +271,7 @@
       "import-spacing": true,
       "no-trailing-whitespace": true,
       "newline-before-return": false,
-      "newline-per-chained-call": true,
+      "newline-per-chained-call": false,
       "one-line": [
         true,
         "check-open-brace",
@@ -319,6 +319,7 @@
       "comment-type": [
         true,
         "singleline",
+        "multiline",
         "doc"
       ],
       "comment-format": [
