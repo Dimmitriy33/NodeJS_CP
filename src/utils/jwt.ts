@@ -4,10 +4,10 @@ import jwt from 'jsonwebtoken';
 // types
 
 interface IVerifyModel {
-    isValid: boolean;
-    expired: boolean;
-    decoded: string | jwt.JwtPayload | null;
-  }
+  isValid: boolean;
+  expired: boolean;
+  decoded: string | jwt.JwtPayload | null;
+}
 
 //
 
@@ -20,7 +20,6 @@ export function signJWT(
   options?: jwt.SignOptions | undefined
 ) {
   return jwt.sign(object, privateKey, {
-    // tslint:disable-next-line: no-tautology-expression
     ...(options && options),
     // allow us to use public and private keys
     algorithm: 'RS256'
@@ -35,7 +34,7 @@ export function verifyJWT(token: string) {
       expired: false,
       decoded
     } as IVerifyModel;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return {
       isValid: false,

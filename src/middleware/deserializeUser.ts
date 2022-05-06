@@ -3,14 +3,8 @@ import { get } from 'lodash';
 import { reIssueAccessToken } from '../services/session.service';
 import { verifyJWT } from '../utils/jwt';
 
-// tslint:disable-next-line: typedef
 export default async function deserializeUser(req: Request, res: Response, next: NextFunction) {
-  const accessToken = get(
-      req,
-      'headers.authorization',
-      ''
-    )
-    .replace(/^Bearer\s/, '');
+  const accessToken = get(req, 'headers.authorization', '').replace(/^Bearer\s/, '');
 
   const refreshToken = get(req, 'headers.x-refresh');
 
@@ -18,7 +12,7 @@ export default async function deserializeUser(req: Request, res: Response, next:
     return next();
   }
 
-  const {decoded, expired} = verifyJWT(accessToken);
+  const { decoded, expired } = verifyJWT(accessToken);
 
   if (decoded != null) {
     res.locals.user = decoded;
@@ -26,7 +20,7 @@ export default async function deserializeUser(req: Request, res: Response, next:
   }
 
   if (expired && refreshToken) {
-    const newAccessToken = await reIssueAccessToken({refreshToken});
+    const newAccessToken = await reIssueAccessToken({ refreshToken });
 
     if (newAccessToken) {
       res.setHeader('x-access-token', newAccessToken as string);

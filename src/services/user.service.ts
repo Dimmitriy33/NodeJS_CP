@@ -1,4 +1,3 @@
-// tslint:disable: typedef
 import { omit } from 'lodash';
 import { DocumentDefinition, FilterQuery } from 'mongoose';
 import UserModel, { UserDocument } from '../models/user.model';
@@ -10,25 +9,18 @@ export interface IValidatePass {
   password: string;
 }
 
-//
-
 export async function createUser(
-    user: DocumentDefinition<Omit<UserDocument,
-    'createdAt' | 'updatedAt' | 'comparePassword'>>
-  ) {
+  user: DocumentDefinition<Omit<UserDocument, 'createdAt' | 'updatedAt' | 'comparePassword'>>
+) {
   try {
     const createdUser = await UserModel.create(user);
-
     return omit(createdUser.toJSON(), 'password');
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
-     throw new Error(e);
+    throw new Error(e);
   }
 }
 
-export default async function validatePass({email, password}: IValidatePass) {
-  // tslint:disable-next-line: await-promise
+export default async function validatePass({ email, password }: IValidatePass) {
   const user = await UserModel.findOne({
     email
   });

@@ -15,24 +15,15 @@ export async function createSession(userId: string, userAgent: string): Promise<
   return session.toJSON();
 }
 
-// tslint:disable-next-line: typedef
 export async function findSessions(query: FilterQuery<SessionDocument>) {
-  return SessionModel
-    .find(query)
-    .lean();
+  return SessionModel.find(query).lean();
 }
 
-// tslint:disable-next-line: typedef
-export async function updateSession(
-  query: FilterQuery<SessionDocument>,
-  update: UpdateQuery<SessionDocument>
-) {
+export async function updateSession(query: FilterQuery<SessionDocument>, update: UpdateQuery<SessionDocument>) {
   return SessionModel.updateOne(query, update);
 }
 
-export async function reIssueAccessToken({refreshToken}: {
-  refreshToken: string
-}): Promise<boolean | string> {
+export async function reIssueAccessToken({ refreshToken }: { refreshToken: string }): Promise<boolean | string> {
   const decoded = verifyJWT(refreshToken);
 
   const id = get(decoded, 'session');
@@ -40,14 +31,13 @@ export async function reIssueAccessToken({refreshToken}: {
     return false;
   }
 
-  // tslint:disable-next-line: await-promise
   const session = await SessionModel.findById(id);
 
   if (!session || !session.isValid) {
     return false;
   }
 
-  const user = await findUser({_id: session.user});
+  const user = await findUser({ _id: session.user });
 
   if (!user) {
     return false;

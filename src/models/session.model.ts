@@ -9,23 +9,25 @@ export interface SessionDocument extends mongoose.Document {
   updatedAt: Date; // related to timestamps
 }
 
-const sessionSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+const sessionSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    isValid: {
+      type: Boolean,
+      default: true
+    },
+    // to store user browser
+    userAgent: {
+      type: String
+    }
   },
-  isValid: {
-    type: Boolean,
-    default: true
-  },
-  // to store user browser
-  userAgent: {
-    type: String
+  {
+    timestamps: true
   }
-}, {
-  timestamps: true
-});
+);
 
-// tslint:disable-next-line: variable-name
 const SessionModel = mongoose.model<SessionDocument>('Session', sessionSchema);
 export default SessionModel;
