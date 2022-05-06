@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { omit } from 'lodash';
 import { DocumentDefinition, FilterQuery } from 'mongoose';
 import UserModel, { UserDocument } from '../models/user.model';

@@ -31,7 +31,8 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: Number,
       enum: enumToValuesArray(OrderStatus),
-      required: true
+      required: true,
+      default: OrderStatus.Unpaid
     }
   },
   {
