@@ -1,19 +1,30 @@
 import bcrypt from 'bcrypt';
 import config from 'config';
 import mongoose from 'mongoose';
+import { enumToValuesArray } from '../helpers/enumToArray';
+import { UserRoles } from '../types/userTypes';
+import { OrderDocument } from './order.model';
+import { ProductRatingDocument } from './productRating.model';
 
 export interface UserDocument extends mongoose.Document {
-  name: string;
+  userName: string;
   email: string;
+  // TODO: add email confirmation
+  // emailConfirmed: boolean;
   password: string;
+  role: number;
+  addressDelivery: string;
+  phoneNumber: string;
   createdAt: Date; // related to timestamps
   updatedAt: Date; // related to timestamps
+  ratings: ProductRatingDocument['_id'];
+  ordersList: OrderDocument['_id'];
   comparePassword(inPass: string): Promise<boolean>;
 }
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    userName: {
       type: String,
       required: true
     },
@@ -25,6 +36,23 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true
+    },
+    role: {
+      type: Number,
+      enum: enumToValuesArray(UserRoles),
+      required: true
+    },
+    addressDelivery: {
+      type: String,
+      required: true
+    },
+    ratings: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ProductRating'
+    },
+    ordersList: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Order'
     }
   },
   {

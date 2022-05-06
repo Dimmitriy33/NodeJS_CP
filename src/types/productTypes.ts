@@ -1,4 +1,4 @@
-export const enum Platforms {
+export enum Platforms {
   Playstation = 1,
   Xbox = 2,
   PC = 3,
@@ -6,7 +6,7 @@ export const enum Platforms {
   Nintendo = 5
 }
 
-export const enum GamesGenres {
+export enum GamesGenres {
   Action = 1,
   Adventure = 2,
   RolePlaying = 3,
@@ -16,7 +16,7 @@ export const enum GamesGenres {
   MMO = 7
 }
 
-export const enum GamesRating {
+export enum GamesRating {
   Rating0 = 0,
   Rating6 = 6,
   Rating12 = 12,

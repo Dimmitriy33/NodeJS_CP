@@ -1,36 +1,37 @@
 import mongoose from 'mongoose';
-import { Platforms } from '../types/productTypes';
+import { OrderStatus } from '../types/orderTypes';
 import { UserDocument } from './user.model';
+import { enumToValuesArray } from '../helpers/enumToArray';
+import { ProductDocument } from './product.model';
 
 export interface OrderDocument extends mongoose.Document {
-  product: UserDocument['_id'];
-  mame: string;
-  platform: Platforms;
-  dateCreated: Date;
-  totalRating: number;
-  Genre: number;
-  Logo: number;
-  Background: number;
-  Price: number;
-  Count: number;
-  IsDeleted: number;
-  // Ratings: number; // Related to ProductRatings table
-  // OrdersList: number; // Related to Order table
+  userId: UserDocument['_id'];
+  productId: ProductDocument['_id'];
+  createdAt: Date; // related to timestamps
+  amount: number;
+  status: number;
 }
 
 const orderSchema = new mongoose.Schema(
   {
-    user: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
+      required: true,
       ref: 'User'
     },
-    isValid: {
-      type: Boolean,
-      default: true
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'Product'
     },
-    // to store user browser
-    userAgent: {
-      type: String
+    amount: {
+      type: Number,
+      required: true
+    },
+    status: {
+      type: Number,
+      enum: enumToValuesArray(OrderStatus),
+      required: true
     }
   },
   {

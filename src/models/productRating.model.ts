@@ -5,41 +5,27 @@ import { UserDocument } from './user.model';
 // uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 
 export interface ProductRatingDocument extends mongoose.Document {
-  productId: string;
-  userId: string;
   rating: number;
-  // product: number; // Related to ProductRatings table
-  // user: number; // Related to Order table
-  product: ProductDocument['_id'];
-  user: UserDocument['_id'];
+  userId: UserDocument['_id'];
+  productId: ProductDocument['_id'];
 }
 
-const productRatingSchema = new mongoose.Schema(
-  {
-    productId: {
-      type: Boolean,
-      default: true
-    },
-    userId: {
-      type: Boolean,
-      default: true
-    },
-    rating: {
-      type: String
-    },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product'
-    }
+const productRatingSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   },
-  {
-    timestamps: true
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'Product'
+  },
+  rating: {
+    type: Number,
+    required: true
   }
-);
+});
 
 const ProductRatingModel = mongoose.model<ProductRatingDocument>('ProductRating', productRatingSchema);
 export default ProductRatingModel;
