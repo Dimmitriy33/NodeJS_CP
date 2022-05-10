@@ -26,7 +26,9 @@ const userSchema = new mongoose.Schema(
   {
     userName: {
       type: String,
-      required: true
+      required: true,
+      maxlength: 32,
+      minlength: 6
     },
     email: {
       type: String,
@@ -44,6 +46,16 @@ const userSchema = new mongoose.Schema(
     },
     addressDelivery: {
       type: String,
+      required: true
+    },
+    phoneNumber: {
+      type: String,
+      // validate: {
+      //   validator: function (v: string) {
+      //     return /\d{3}-\d{3}-\d{4}/.test(v);
+      //   },
+      //   message: '{VALUE} is not a valid phone number!'
+      // },
       required: true
     },
     ratings: {

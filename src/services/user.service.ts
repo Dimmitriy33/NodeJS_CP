@@ -2,6 +2,7 @@
 import { omit } from 'lodash';
 import { DocumentDefinition, FilterQuery } from 'mongoose';
 import UserModel, { UserDocument } from '../models/user.model';
+import { UserRoles } from '../types/userTypes';
 
 // Types
 
@@ -11,10 +12,17 @@ export interface IValidatePass {
 }
 
 export async function createUser(
-  user: DocumentDefinition<Omit<UserDocument, 'createdAt' | 'updatedAt' | 'comparePassword'>>
+  user: DocumentDefinition<
+    Omit<UserDocument, 'createdAt' | 'updatedAt' | 'comparePassword' | 'role' | 'ratings' | 'ordersList'>
+  >
 ) {
   try {
-    const createdUser = await UserModel.create(user);
+    const newUser = {
+      ...user,
+      role: UserRoles.User
+    };
+
+    const createdUser = await UserModel.create(newUser);
     return omit(createdUser.toJSON(), 'password');
   } catch (e: any) {
     throw new Error(e);
