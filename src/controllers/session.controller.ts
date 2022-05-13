@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import config from 'config';
 import { Request, Response } from 'express';
 import { createSession, findSessions, updateSession } from '../services/session.service';
@@ -51,6 +52,7 @@ export async function getUserSessionsHandler(
   res: Response
 ): Promise<Response<any, Record<string, any>>> {
   const userId = res.locals.user._id;
+
   const sessions = await findSessions({
     user: userId,
     valid: true
