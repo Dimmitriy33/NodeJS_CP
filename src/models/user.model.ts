@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
-import config from 'config';
 import mongoose from 'mongoose';
 import { enumToValuesArray } from '../helpers/enumToArray';
 import { UserRoles } from '../types/userTypes';
+import getHashPass from '../utils/hashPass';
 import { OrderDocument } from './order.model';
 import { ProductRatingDocument } from './productRating.model';
 
@@ -79,11 +79,9 @@ userSchema.pre('save', async function (next) {
     return next();
   }
 
-  const saltWorkFactor = config.get<number>('saltWorkFactor');
-  const salt = await bcrypt.genSalt(saltWorkFactor);
-  const hash = bcrypt.hashSync(user.password, salt);
-
+  const hash = await getHashPass(user.password);
   user.password = hash;
+
   return next();
 });
 

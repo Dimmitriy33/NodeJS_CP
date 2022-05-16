@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Request, Response } from 'express';
 import { omit } from 'lodash';
+import { simpleMapPatch } from '../helpers/jsonPatchMapper';
+import UserModel from '../models/user.model';
 import { setSessionTokens } from '../services/session.service';
-import validatePass, { createUser, findUser, updateUser } from '../services/user.service';
+import validatePass, { createUser, findUser, resetPass, updateUser } from '../services/user.service';
+import { IResetPassModel } from '../types/userTypes';
+import getHashPass from '../utils/hashPass';
 import Logger from '../utils/logger';
 import { CreateUserInput, UpdateUserInput } from '../utils/validation/user.validation';
 
@@ -55,4 +59,11 @@ export async function updateUserHandler(req: Request<{}, {}, UpdateUserInput['bo
   await updateUser({ _id: user.id }, omit(user, 'id'));
 
   return res.send(user);
+}
+
+export async function resetPassHandler(req: Request, res: Response) {
+  const model: IResetPassModel = simpleMapPatch(req.body);
+  const result = await resetPass(model);
+
+  res.status(result.status).send(result.msgOrResModel);
 }

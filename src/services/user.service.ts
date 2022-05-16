@@ -2,7 +2,9 @@
 import { omit } from 'lodash';
 import { DocumentDefinition, FilterQuery, UpdateQuery } from 'mongoose';
 import UserModel, { UserDocument } from '../models/user.model';
-import { UserRoles } from '../types/userTypes';
+import { IResultModel } from '../types/resultModelTypes';
+import { IResetPassModel, UserRoles } from '../types/userTypes';
+import getHashPass from '../utils/hashPass';
 
 // Types
 
@@ -53,4 +55,34 @@ export async function findUser(query: FilterQuery<UserDocument>) {
 
 export async function updateUser(query: FilterQuery<UserDocument>, update: UpdateQuery<UserDocument>) {
   return UserModel.updateOne(query, update);
+}
+
+export async function resetPass(model: IResetPassModel): Promise<IResultModel<string>> {
+  const user = await UserModel.findOne({
+    _id: model.id
+  });
+
+  if (!user) {
+    return {
+      status: 400,
+      msgOrResModel: 'User not found'
+    };
+  }
+
+  const isValid = await user.comparePassword(model.oldPassword);
+
+  if (isValid) {
+    const hash = await getHashPass(model.newPassword);
+    await updateUser({ _id: user.id }, { password: hash });
+
+    return {
+      status: 200,
+      msgOrResModel: 'Password changed'
+    };
+  }
+
+  return {
+    status: 400,
+    msgOrResModel: 'Old password is not valid'
+  };
 }

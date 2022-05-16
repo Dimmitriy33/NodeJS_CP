@@ -1,4 +1,4 @@
-import { object, string, TypeOf } from 'zod';
+import { array, object, string, TypeOf } from 'zod';
 
 export const createUserValidationSchema = object({
   body: object({
@@ -55,5 +55,22 @@ export const updateUserValidationSchema = object({
   })
 });
 
+export const resetPassUserValidationSchema = object({
+  body: array(
+    object({
+      op: string({
+        required_error: 'id is required!'
+      }),
+      path: string({
+        required_error: 'oldPassword is required!'
+      }),
+      value: string({
+        required_error: 'newPassword is required!'
+      })
+    })
+  )
+});
+
 export type CreateUserInput = Omit<TypeOf<typeof createUserValidationSchema>, 'body.passwordConfirmation'>;
 export type UpdateUserInput = TypeOf<typeof updateUserValidationSchema>;
+export type ResetPassUserInput = TypeOf<typeof resetPassUserValidationSchema>;
