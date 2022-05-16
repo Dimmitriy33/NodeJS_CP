@@ -33,4 +33,27 @@ export const createUserValidationSchema = object({
   })
 });
 
+export const updateUserValidationSchema = object({
+  body: object({
+    id: string({
+      required_error: 'id is required!'
+    }),
+
+    userName: string({
+      required_error: 'userName is required!'
+    })
+      .min(6, 'userName must be at most 32 characters!')
+      .max(32, 'userName must be at least 6 characters!'),
+
+    phoneNumber: string({
+      required_error: 'Phone number is required!'
+    }).regex(/\d{3}-\d{3}-\d{4}/, 'Not a valid phone number!'),
+
+    addressDelivery: string({
+      required_error: 'Address delivery is required!'
+    })
+  })
+});
+
 export type CreateUserInput = Omit<TypeOf<typeof createUserValidationSchema>, 'body.passwordConfirmation'>;
+export type UpdateUserInput = TypeOf<typeof updateUserValidationSchema>;

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { omit } from 'lodash';
-import { DocumentDefinition, FilterQuery } from 'mongoose';
+import { DocumentDefinition, FilterQuery, UpdateQuery } from 'mongoose';
 import UserModel, { UserDocument } from '../models/user.model';
 import { UserRoles } from '../types/userTypes';
 
@@ -49,4 +49,8 @@ export default async function validatePass({ email, password }: IValidatePass) {
 
 export async function findUser(query: FilterQuery<UserDocument>) {
   return UserModel.findOne(query).lean();
+}
+
+export async function updateUser(query: FilterQuery<UserDocument>, update: UpdateQuery<UserDocument>) {
+  return UserModel.updateOne(query, update);
 }

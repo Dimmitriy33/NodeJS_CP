@@ -1,10 +1,10 @@
 import { Express, Request, Response } from 'express';
 import { createSessionHandler, deleteSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
-import { createUserHandler, getUserHandler } from './controllers/user.controller';
+import { createUserHandler, getUserHandler, loginUserHandler, updateUserHandler } from './controllers/user.controller';
 import requireUser from './middleware/requireUser';
 import validate from './middleware/validateResource';
 import { createSessionValidationSchema } from './utils/validation/session.validation';
-import { createUserValidationSchema } from './utils/validation/user.validation';
+import { createUserValidationSchema, updateUserValidationSchema } from './utils/validation/user.validation';
 
 export default function routes(app: Express): void {
   app.get('/testAPI', (req: Request, res: Response) => {
@@ -12,8 +12,9 @@ export default function routes(app: Express): void {
   });
 
   app.post('/api/auth/sign-up', validate(createUserValidationSchema), createUserHandler);
-  app.post('/api/auth/sign-in', validate(createSessionValidationSchema), createSessionHandler);
+  app.post('/api/auth/sign-in', validate(createSessionValidationSchema), loginUserHandler);
   app.get('/api/user', requireUser, getUserHandler);
+  app.put('/api/user', requireUser, validate(updateUserValidationSchema), updateUserHandler);
 
   app.get('/api/sessions', requireUser, getUserSessionsHandler);
   app.post('/api/sessions', validate(createSessionValidationSchema), createSessionHandler);

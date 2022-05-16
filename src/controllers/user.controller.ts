@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Request, Response } from 'express';
-import { createUser } from '../services/user.service';
+import { omit } from 'lodash';
+import { setSessionTokens } from '../services/session.service';
+import validatePass, { createUser, findUser, updateUser } from '../services/user.service';
 import Logger from '../utils/logger';
-import { CreateUserInput } from '../utils/validation/user.validation';
+import { CreateUserInput, UpdateUserInput } from '../utils/validation/user.validation';
 
 const userErrMsgs = {
   createUser: 'Invalid Register Attempt! Please try again.'
@@ -21,6 +23,36 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput['bo
   }
 }
 
-export async function getUserHandler(req: Request, res: Response) {
-  return res.send(res.locals.user);
+export async function loginUserHandler(req: Request, res: Response) {
+  const user = await validatePass(req.body);
+
+  if (!user) {
+    return res.status(401).send('Invalid email or password');
+  }
+
+  let userAgent = req.get('user-agent') || '';
+
+  // just for test to skip error
+  if (userAgent === 'PostmanRuntime/7.28.4') {
+    userAgent = 'TestUA';
+  }
+
+  const tokens = await setSessionTokens(user, userAgent);
+  return res.send(tokens.accessToken);
+}
+
+export async function getUserHandler(req: Request<{}, {}>, res: Response) {
+  const user = await findUser({
+    _id: res.locals.user._id
+  });
+
+  res.locals.user = user;
+  return res.send(user);
+}
+
+export async function updateUserHandler(req: Request<{}, {}, UpdateUserInput['body']>, res: Response) {
+  const user = req.body;
+  await updateUser({ _id: user.id }, omit(user, 'id'));
+
+  return res.send(user);
 }

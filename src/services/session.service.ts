@@ -50,3 +50,19 @@ export async function reIssueAccessToken({ refreshToken }: { refreshToken: strin
 
   return accessToken;
 }
+
+export async function setSessionTokens(
+  user: { _id: string },
+  userAgent: string
+): Promise<{ accessToken: string; refreshToken: string }> {
+  const session = await createSession(user._id, userAgent);
+
+  const accessToken = signJWT(
+    { ...user, session: session._id },
+    { expiresIn: config.get<string>('accessTokenTtl') } // 15min
+  );
+
+  const refreshToken = signJWT({ ...user, session: session._id }, { expiresIn: config.get<string>('refreshTokenTtl') });
+
+  return { accessToken, refreshToken };
+}
