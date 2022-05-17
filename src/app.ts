@@ -12,11 +12,11 @@ app.use(express.json());
 app.use(deserializeUser);
 
 app.listen(port, async () => {
-    Logger.info(`App is running at http://localhost:${port}`);
+  Logger.info(`App is running at http://localhost:${port}`);
 
-    // Connect to mongoDB
-    await connectDb();
+  // Connect to mongoDB
+  await connectDb();
 
-    // Configure routes
-    routes(app);
+  // Configure routes
+  routes(app);
 });

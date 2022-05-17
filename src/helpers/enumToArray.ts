@@ -29,3 +29,9 @@ export function enumToValuesArray<T>(enumeration: T): T[keyof T][] {
     .filter((key) => typeof enumeration[key] === 'number' || typeof enumeration[key] === 'string')
     .map((key) => enumeration[key]);
 }
+
+export function enumToKeysArray<T>(enumeration: T): (keyof T)[] {
+  return (Object.keys(enumeration) as Array<keyof T>)
+    .filter((key) => Number.isNaN(Number(key)))
+    .filter((key) => typeof enumeration[key] === 'number' || typeof enumeration[key] === 'string');
+}

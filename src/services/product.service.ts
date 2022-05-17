@@ -2,7 +2,9 @@ import ProductModel, { ProductDocument } from '../models/product.model';
 import { DocumentDefinition, FilterQuery } from 'mongoose';
 import { QueryOptions } from 'winston';
 
-export async function creaeteProduct(product: DocumentDefinition<Omit<ProductDocument, 'createdAt' | 'updatedAt'>>) {
+export async function createProduct(
+  product: DocumentDefinition<Omit<ProductDocument, 'createdAt' | 'updatedAt' | 'ratings' | 'ordersList'>>
+) {
   return await ProductModel.create(product);
 }
 

@@ -11,11 +11,11 @@ export interface ProductDocument extends mongoose.Document {
   updatedAt: Date; // related to timestamps
   totalRating: number;
   genre: number;
-  logo: number;
-  background: number;
+  logo: string;
+  background: string;
   price: number;
   count: number;
-  isDeleted: number;
+  isDeleted: boolean;
   ratings: ProductRatingDocument['_id'];
   ordersList: OrderDocument['_id'];
 }
