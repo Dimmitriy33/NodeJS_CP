@@ -8,10 +8,11 @@ import {
   findProduct,
   findProducts,
   searchProductsByName,
-  softDeleteProduct
+  softDeleteProduct,
+  updateProduct
 } from '../services/product.service';
 import { GamesGenres, Platforms } from '../types/productTypes';
-import { CreateProductInput, SearchProductsInput } from '../utils/validation/product.validation';
+import { CreateProductInput, SearchProductsInput, UpdateProductInput } from '../utils/validation/product.validation';
 import fs from 'fs';
 
 const prodErrMsgs = {
@@ -20,40 +21,19 @@ const prodErrMsgs = {
 };
 
 export async function createProductHandler(req: Request<{}, {}, CreateProductInput['body']>, res: Response) {
-  const platformItem = enumToDescriptedArray(Platforms).filter(
-    (v) => v.value.toLowerCase() === req.body.platform.toLowerCase()
-  )[0];
-
-  const genreItem = enumToDescriptedArray(GamesGenres).filter(
-    (v) => v.value.toLowerCase() === req.body.genre.toLowerCase()
-  )[0];
-
-  //@ts-ignore
-  const logoPath = req.files['logo'][0].path;
-  //@ts-ignore
-  const backPath = req.files['background'][0].path;
-
-  const logo = await CloudinaryApi.upload(logoPath);
-  const background = await CloudinaryApi.upload(backPath);
-  fs.unlinkSync(logoPath);
-  fs.unlinkSync(backPath);
-
-  const prod = {
-    ...req.body,
-    platform: platformItem.key,
-    genre: genreItem.key,
-    logo: logo.url,
-    background: background.url,
+  const prod = await getProductDataHelper(req);
+  const product = await createProduct({
+    ...prod,
     isDeleted: false
-  };
-
-  const product = await createProduct(prod);
+  });
   return res.status(201).send(product);
 }
 
 export async function getProductByIdHandler(req: Request<{ id: string }, {}, {}>, res: Response) {
+  const id = req.params.id;
+
   const product = await findProduct({
-    _id: req.params.id,
+    _id: id,
     isDeleted: false
   });
 
@@ -69,7 +49,6 @@ export async function searchProductsByNameHandler(
   res: Response
 ) {
   const { term, limit, offset } = req.query;
-  console.log(req.query, 'req');
   const products = await searchProductsByName(term as string, limit, offset);
 
   return res.send(products);
@@ -116,15 +95,79 @@ export async function getTopPopularPlatformsHandler(req: Request<{}, {}, {}>, re
 export async function softDeleteProductHandler(req: Request<{ id: string }, {}, {}>, res: Response) {
   const id = req.params.id;
 
-  const product = await findProduct({
-    _id: id,
-    isDeleted: false
-  });
+  await checkIsExist(id, res, false);
+
+  await softDeleteProduct(id);
+  return res.sendStatus(200);
+}
+
+export async function updateProductHandler(req: Request<{}, {}, UpdateProductInput['body']>, res: Response) {
+  const id = req.body.id;
+  await checkIsExist(id, res);
+  const prod = await getProductDataHelper(req);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  try {
+    await updateProduct({ _id: id }, prod as any);
+  } catch (err) {
+    return res.status(404).send(err);
+  }
+
+  return res.send(prod);
+}
+
+// helper functions --
+async function checkIsExist(id: string, res: Response, isDeleted: boolean | undefined = undefined) {
+  let query: {
+    _id: string;
+    isDeleted?: boolean;
+  } = {
+    _id: id
+  };
+
+  if (isDeleted !== undefined) {
+    query = {
+      ...query,
+      isDeleted
+    };
+  }
+
+  const product = await findProduct(query);
 
   if (!product) {
     return res.status(404).send({ message: prodErrMsgs.productNotFound });
   }
 
-  await softDeleteProduct(id);
-  return res.sendStatus(200);
+  return true;
+}
+
+async function getProductDataHelper(req: Request<{}, {}, CreateProductInput['body'] | UpdateProductInput['body']>) {
+  const platformItem = enumToDescriptedArray(Platforms).filter(
+    (v) => v.value.toLowerCase() === req.body.platform.toLowerCase()
+  )[0];
+
+  const genreItem = enumToDescriptedArray(GamesGenres).filter(
+    (v) => v.value.toLowerCase() === req.body.genre.toLowerCase()
+  )[0];
+
+  //@ts-ignore
+  const logoPath = req.files['logo'][0].path;
+  //@ts-ignore
+  const backPath = req.files['background'][0].path;
+
+  const logo = await CloudinaryApi.upload(logoPath);
+  const background = await CloudinaryApi.upload(backPath);
+  fs.unlinkSync(logoPath);
+  fs.unlinkSync(backPath);
+
+  const prod = {
+    ...req.body,
+    platform: platformItem.key,
+    genre: genreItem.key,
+    logo: logo.url,
+    background: background.url
+  };
+
+  return prod;
 }

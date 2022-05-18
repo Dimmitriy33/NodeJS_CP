@@ -4,7 +4,8 @@ import {
   getProductByIdHandler,
   getTopPopularPlatformsHandler,
   searchProductsByNameHandler,
-  softDeleteProductHandler
+  softDeleteProductHandler,
+  updateProductHandler
 } from './controllers/product.controller';
 import { createSessionHandler, deleteSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
 import {
@@ -19,7 +20,8 @@ import validate from './middleware/validateResource';
 import {
   createProductValidationSchema,
   getProductValidationSchema,
-  searchProductsByNameSchema
+  searchProductsByNameSchema,
+  updateProductValidationSchema
 } from './utils/validation/product.validation';
 import { createSessionValidationSchema } from './utils/validation/session.validation';
 import {
@@ -49,12 +51,25 @@ export default function routes(app: Express): void {
   app.get('/api/games/search', requireUser, validate(searchProductsByNameSchema), searchProductsByNameHandler);
   app.get('/api/games/top-platforms', requireUser, getTopPopularPlatformsHandler);
   app.get('/api/games/:id', requireUser, validate(getProductValidationSchema), getProductByIdHandler);
-  app.post('/api/games', cpUpload, requireUser, validate(createProductValidationSchema), createProductHandler);
+  app.post(
+    '/api/games',
+    productFilesUpload,
+    requireUser,
+    validate(createProductValidationSchema),
+    createProductHandler
+  );
+  app.put(
+    '/api/games',
+    productFilesUpload,
+    requireUserWithAdminRole,
+    validate(updateProductValidationSchema),
+    updateProductHandler
+  );
   app.delete('/api/games/soft-remove/id/:id', requireUserWithAdminRole, softDeleteProductHandler);
 }
 
 // helpers for multer
-const cpUpload = upload.fields([
+const productFilesUpload = upload.fields([
   { name: 'logo', maxCount: 1 },
   { name: 'background', maxCount: 1 }
 ]);

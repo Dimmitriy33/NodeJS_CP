@@ -48,21 +48,20 @@ const basicProductSchema = {
     .transform((v) => Number(v))
 };
 
+const createProductValidationSchemaModel = { ...basicProductSchema, logo: any(), background: any() };
 export const createProductValidationSchema = object({
-  body: object({ ...basicProductSchema, logo: any(), background: any() })
+  body: object(createProductValidationSchemaModel)
 });
 
 export const updateProductValidationSchema = object({
   body: object({
-    ...basicProductSchema,
+    ...createProductValidationSchemaModel,
     id: string({
       required_error: 'Id is required!'
     }),
-    logo: any().refine((v) => v == null, {
-      message: 'Logo is not valid!',
-      path: ['logo']
-    }),
-    background: any()
+    isDeleted: string({
+      required_error: 'Is deleted is required!'
+    }).transform((v) => Boolean(v))
   })
 });
 
