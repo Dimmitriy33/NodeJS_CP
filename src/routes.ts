@@ -2,6 +2,7 @@ import { Express, Request, Response } from 'express';
 import {
   createProductHandler,
   getProductByIdHandler,
+  getTopPopularPlatformsHandler,
   searchProductsByNameHandler
 } from './controllers/product.controller';
 import { createSessionHandler, deleteSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
@@ -46,6 +47,7 @@ export default function routes(app: Express): void {
   //@ts-ignore
   app.get('/api/games/search', requireUser, validate(searchProductsByNameSchema), searchProductsByNameHandler);
   app.post('/api/games', cpUpload, requireUser, validate(createProductValidationSchema), createProductHandler);
+  app.get('/api/games/top-platforms', requireUser, getTopPopularPlatformsHandler);
   app.get('/api/games/:id', requireUser, validate(getProductValidationSchema), getProductByIdHandler);
 }
 

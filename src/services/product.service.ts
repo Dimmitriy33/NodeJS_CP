@@ -12,6 +12,10 @@ export async function findProduct(query: FilterQuery<ProductDocument>) {
   return await ProductModel.findOne(query).lean();
 }
 
+export async function findProducts(query: FilterQuery<ProductDocument>, options?: QueryOptions) {
+  return await ProductModel.find(query, null, options).lean();
+}
+
 export async function searchProductsByName(term: string, limit: number, offset: number) {
   return await ProductModel.find(
     {
@@ -25,20 +29,21 @@ export async function searchProductsByName(term: string, limit: number, offset: 
   ).lean();
 }
 
-export async function getTopPopularPlatforms(count: number) {
-  return await ProductModel.aggregate([
-    {
-      $group: {
-        _id: '$platform',
-        count: { $sum: 1 }
-      },
-      $sort: {
-        count: -1
-      },
-      $limit: count
-    }
-  ]);
-}
+// TODO: Fix and implement
+// export async function getTopPopularPlatforms(count: number) {
+//   return await ProductModel.aggregate([
+//     {
+//       $group: {
+//         _id: 'platform',
+//         count: { $sum: 1 }
+//       },
+//       $sort: {
+//         count: -1
+//       },
+//       $limit: count
+//     }
+//   ]);
+// }
 
 export async function updateProduct(
   query: FilterQuery<ProductDocument>, //
