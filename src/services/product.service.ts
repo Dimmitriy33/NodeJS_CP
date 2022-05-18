@@ -19,7 +19,8 @@ export async function findProducts(query: FilterQuery<ProductDocument>, options?
 export async function searchProductsByName(term: string, limit: number, offset: number) {
   return await ProductModel.find(
     {
-      name: { $regex: '^' + term }
+      name: { $regex: '^' + term },
+      isDeleted: false
     },
     {},
     {
@@ -57,6 +58,6 @@ export async function deleteProduct(id: number) {
   return await ProductModel.findByIdAndDelete(id);
 }
 
-export async function softDeleteProduct(id: number) {
-  return await ProductModel.findByIdAndUpdate(id, { isDeleted: 1 });
+export async function softDeleteProduct(id: string) {
+  return await ProductModel.findByIdAndUpdate(id, { isDeleted: true });
 }

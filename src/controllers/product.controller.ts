@@ -3,7 +3,13 @@
 import { Request, Response } from 'express';
 import { enumToDescriptedArray } from '../helpers/enumToArray';
 import { CloudinaryApi } from '../services/cloudinary.service';
-import { createProduct, findProduct, findProducts, searchProductsByName } from '../services/product.service';
+import {
+  createProduct,
+  findProduct,
+  findProducts,
+  searchProductsByName,
+  softDeleteProduct
+} from '../services/product.service';
 import { GamesGenres, Platforms } from '../types/productTypes';
 import { CreateProductInput, SearchProductsInput } from '../utils/validation/product.validation';
 import fs from 'fs';
@@ -42,12 +48,13 @@ export async function createProductHandler(req: Request<{}, {}, CreateProductInp
   };
 
   const product = await createProduct(prod);
-  return res.send(product);
+  return res.status(201).send(product);
 }
 
 export async function getProductByIdHandler(req: Request<{ id: string }, {}, {}>, res: Response) {
   const product = await findProduct({
-    _id: req.params.id
+    _id: req.params.id,
+    isDeleted: false
   });
 
   if (!product) {
@@ -104,4 +111,20 @@ export async function getTopPopularPlatformsHandler(req: Request<{}, {}, {}>, re
   }
 
   return res.send(result);
+}
+
+export async function softDeleteProductHandler(req: Request<{ id: string }, {}, {}>, res: Response) {
+  const id = req.params.id;
+
+  const product = await findProduct({
+    _id: id,
+    isDeleted: false
+  });
+
+  if (!product) {
+    return res.status(404).send({ message: prodErrMsgs.productNotFound });
+  }
+
+  await softDeleteProduct(id);
+  return res.sendStatus(200);
 }

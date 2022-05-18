@@ -3,7 +3,8 @@ import {
   createProductHandler,
   getProductByIdHandler,
   getTopPopularPlatformsHandler,
-  searchProductsByNameHandler
+  searchProductsByNameHandler,
+  softDeleteProductHandler
 } from './controllers/product.controller';
 import { createSessionHandler, deleteSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
 import {
@@ -13,7 +14,7 @@ import {
   resetPassHandler,
   updateUserHandler
 } from './controllers/user.controller';
-import requireUser from './middleware/requireUser';
+import requireUser, { requireUserWithAdminRole } from './middleware/requireUser';
 import validate from './middleware/validateResource';
 import {
   createProductValidationSchema,
@@ -46,9 +47,10 @@ export default function routes(app: Express): void {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   app.get('/api/games/search', requireUser, validate(searchProductsByNameSchema), searchProductsByNameHandler);
-  app.post('/api/games', cpUpload, requireUser, validate(createProductValidationSchema), createProductHandler);
   app.get('/api/games/top-platforms', requireUser, getTopPopularPlatformsHandler);
   app.get('/api/games/:id', requireUser, validate(getProductValidationSchema), getProductByIdHandler);
+  app.post('/api/games', cpUpload, requireUser, validate(createProductValidationSchema), createProductHandler);
+  app.delete('/api/games/soft-remove/id/:id', requireUserWithAdminRole, softDeleteProductHandler);
 }
 
 // helpers for multer
