@@ -1,4 +1,4 @@
-import { object, string, number, TypeOf, any } from 'zod';
+import { object, string, TypeOf, any } from 'zod';
 import { enumToKeysArray, enumToValuesArray } from '../../helpers/enumToArray';
 import { GamesGenres, GamesRating, Platforms } from '../../types/productTypes';
 
@@ -9,45 +9,43 @@ const basicProductSchema = {
 
   platform: string({
     required_error: 'Platform is required!'
-  }).refine(
-    (v) => {
-      console.log(v);
-      return (enumToKeysArray(Platforms) as string[]).includes(v);
-    },
-    {
-      message: 'Platform is not valid!',
-      path: ['platform']
-    }
-  ),
+  }).refine((v) => (enumToKeysArray(Platforms) as string[]).includes(v), {
+    message: 'Platform is not valid!'
+  }),
 
-  totalRating: number({
+  totalRating: string({
     required_error: 'Total rating is required!'
   })
     .min(0, 'Total rating must be greater than 0!')
-    .max(10, 'Total rating must be less than 10!'),
+    .max(10, 'Total rating must be less than 10!')
+    .transform((v) => Number(v)),
 
   genre: string({
     required_error: 'Genre is required!'
-  }).refine((v) => (enumToKeysArray(GamesGenres) as string[]).includes(v), {
-    message: 'Genre is not valid!',
-    path: ['genre']
+  }).refine((v) => (enumToKeysArray(GamesGenres) as string[]).map((g) => g.toLowerCase()).includes(v), {
+    message: 'Genre is not valid!'
   }),
 
   // rating
-  rating: number({
+  rating: string({
     required_error: 'Rating is required!'
-  }).refine((v) => enumToValuesArray(GamesRating).includes(v), {
-    message: 'Rating is not valid!',
-    path: ['rating']
-  }),
+  })
+    .refine((v) => enumToValuesArray(GamesRating).includes(Number(v)), {
+      message: 'Rating is not valid!'
+    })
+    .transform((v) => Number(v)),
 
-  price: number({
+  price: string({
     required_error: 'Price is required!'
-  }).min(0, 'Price must be greater than 0!'),
+  })
+    .min(0, 'Price must be greater than 0!')
+    .transform((v) => Number(v)),
 
-  count: number({
+  count: string({
     required_error: 'Count is required!'
-  }).min(0, 'Count must be greater than 0!')
+  })
+    .min(0, 'Count must be greater than 0!')
+    .transform((v) => Number(v))
 };
 
 export const createProductValidationSchema = object({

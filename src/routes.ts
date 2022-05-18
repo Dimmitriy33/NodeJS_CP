@@ -1,7 +1,6 @@
 import { Express, Request, Response } from 'express';
 import { createProductHandler } from './controllers/product.controller';
 import { createSessionHandler, deleteSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
-import multer from 'multer';
 import {
   createUserHandler,
   getUserHandler,
@@ -18,8 +17,7 @@ import {
   updateUserValidationSchema,
   resetPassUserValidationSchema
 } from './utils/validation/user.validation';
-
-const upload = multer({ dest: './public/data/uploads/' });
+import upload from './utils/multerConfig';
 
 export default function routes(app: Express): void {
   app.get('/testAPI', (req: Request, res: Response) => {
@@ -36,10 +34,11 @@ export default function routes(app: Express): void {
   app.post('/api/sessions', validate(createSessionValidationSchema), createSessionHandler);
   app.delete('/api/sessions', requireUser, deleteSessionHandler);
 
-  const cpUpload = upload.fields([
-    { name: 'logo', maxCount: 1 },
-    { name: 'background', maxCount: 1 }
-  ]);
-
   app.post('/api/games', cpUpload, requireUser, validate(createProductValidationSchema), createProductHandler);
 }
+
+// helpers for multer
+const cpUpload = upload.fields([
+  { name: 'logo', maxCount: 1 },
+  { name: 'background', maxCount: 1 }
+]);
