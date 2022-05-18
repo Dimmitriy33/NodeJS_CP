@@ -1,5 +1,9 @@
 import { Express, Request, Response } from 'express';
-import { createProductHandler, getProductByIdHandler } from './controllers/product.controller';
+import {
+  createProductHandler,
+  getProductByIdHandler,
+  searchProductsByNameHandler
+} from './controllers/product.controller';
 import { createSessionHandler, deleteSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
 import {
   createUserHandler,
@@ -10,7 +14,11 @@ import {
 } from './controllers/user.controller';
 import requireUser from './middleware/requireUser';
 import validate from './middleware/validateResource';
-import { createProductValidationSchema, getProductValidationSchema } from './utils/validation/product.validation';
+import {
+  createProductValidationSchema,
+  getProductValidationSchema,
+  searchProductsByNameSchema
+} from './utils/validation/product.validation';
 import { createSessionValidationSchema } from './utils/validation/session.validation';
 import {
   createUserValidationSchema,
@@ -34,6 +42,9 @@ export default function routes(app: Express): void {
   app.post('/api/sessions', validate(createSessionValidationSchema), createSessionHandler);
   app.delete('/api/sessions', requireUser, deleteSessionHandler);
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  app.get('/api/games/search', requireUser, validate(searchProductsByNameSchema), searchProductsByNameHandler);
   app.post('/api/games', cpUpload, requireUser, validate(createProductValidationSchema), createProductHandler);
   app.get('/api/games/:id', requireUser, validate(getProductValidationSchema), getProductByIdHandler);
 }

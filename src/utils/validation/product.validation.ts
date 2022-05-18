@@ -74,6 +74,29 @@ export const getProductValidationSchema = object({
   })
 });
 
+export const searchProductsByNameSchema = object({
+  query: object({
+    term: string({
+      required_error: 'Name is required!'
+    }),
+    limit: string({
+      required_error: 'Limit is required!'
+    })
+      .refine((v) => Number(v) > 0, {
+        message: 'Limit must be greater than 0!'
+      })
+      .transform((v) => Number(v)),
+    offset: string({
+      required_error: 'Offset is required!'
+    })
+      .refine((v) => Number(v) >= 0, {
+        message: 'Offset must be greater than 0!'
+      })
+      .transform((v) => Number(v))
+  })
+});
+
 export type CreateProductInput = TypeOf<typeof createProductValidationSchema>;
 export type UpdateProductInput = TypeOf<typeof updateProductValidationSchema>;
 export type GetProductInput = TypeOf<typeof getProductValidationSchema>;
+export type SearchProductsInput = TypeOf<typeof searchProductsByNameSchema>;

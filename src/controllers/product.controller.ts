@@ -3,9 +3,9 @@
 import { Request, Response } from 'express';
 import { enumToDescriptedArray } from '../helpers/enumToArray';
 import { CloudinaryApi } from '../services/cloudinary.service';
-import { createProduct, findProduct } from '../services/product.service';
+import { createProduct, findProduct, searchProductsByName } from '../services/product.service';
 import { GamesGenres, Platforms } from '../types/productTypes';
-import { CreateProductInput } from '../utils/validation/product.validation';
+import { CreateProductInput, SearchProductsInput } from '../utils/validation/product.validation';
 import fs from 'fs';
 
 const prodErrMsgs = {
@@ -55,4 +55,15 @@ export async function getProductByIdHandler(req: Request<{ id: string }, {}, {}>
   }
 
   return res.send(product);
+}
+
+export async function searchProductsByNameHandler(
+  req: Request<{}, {}, {}, SearchProductsInput['query']>,
+  res: Response
+) {
+  const { term, limit, offset } = req.query;
+  console.log(req.query, 'req');
+  const products = await searchProductsByName(term as string, limit, offset);
+
+  return res.send(products);
 }
