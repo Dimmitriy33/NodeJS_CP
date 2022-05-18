@@ -3,10 +3,15 @@
 import { Request, Response } from 'express';
 import { enumToDescriptedArray } from '../helpers/enumToArray';
 import { CloudinaryApi } from '../services/cloudinary.service';
-import { createProduct } from '../services/product.service';
+import { createProduct, findProduct } from '../services/product.service';
 import { GamesGenres, Platforms } from '../types/productTypes';
 import { CreateProductInput } from '../utils/validation/product.validation';
 import fs from 'fs';
+
+const prodErrMsgs = {
+  productNotFound: 'Product not found'
+  // loginUser: 'Invalid Login Attempt! Email or Password is incorrect'
+};
 
 export async function createProductHandler(req: Request<{}, {}, CreateProductInput['body']>, res: Response) {
   const platformItem = enumToDescriptedArray(Platforms).filter(
@@ -37,5 +42,17 @@ export async function createProductHandler(req: Request<{}, {}, CreateProductInp
   };
 
   const product = await createProduct(prod);
+  return res.send(product);
+}
+
+export async function getProductByIdHandler(req: Request<{ id: string }, {}, {}>, res: Response) {
+  const product = await findProduct({
+    _id: req.params.id
+  });
+
+  if (!product) {
+    return res.status(404).send({ message: prodErrMsgs.productNotFound });
+  }
+
   return res.send(product);
 }

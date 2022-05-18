@@ -16,8 +16,8 @@ export interface ProductDocument extends mongoose.Document {
   price: number;
   count: number;
   isDeleted: boolean;
-  ratings: ProductRatingDocument['_id'];
-  ordersList: OrderDocument['_id'];
+  ratings?: ProductRatingDocument['_id'];
+  ordersList?: OrderDocument['_id'];
 }
 
 const productSchema = new mongoose.Schema(
@@ -68,11 +68,13 @@ const productSchema = new mongoose.Schema(
     },
     ratings: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'ProductRating'
+      ref: 'ProductRating',
+      required: false
     },
     ordersList: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Order'
+      ref: 'Order',
+      required: false
     }
   },
   {

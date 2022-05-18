@@ -1,5 +1,5 @@
 import { Express, Request, Response } from 'express';
-import { createProductHandler } from './controllers/product.controller';
+import { createProductHandler, getProductByIdHandler } from './controllers/product.controller';
 import { createSessionHandler, deleteSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
 import {
   createUserHandler,
@@ -10,7 +10,7 @@ import {
 } from './controllers/user.controller';
 import requireUser from './middleware/requireUser';
 import validate from './middleware/validateResource';
-import { createProductValidationSchema } from './utils/validation/product.validation';
+import { createProductValidationSchema, getProductValidationSchema } from './utils/validation/product.validation';
 import { createSessionValidationSchema } from './utils/validation/session.validation';
 import {
   createUserValidationSchema,
@@ -35,6 +35,7 @@ export default function routes(app: Express): void {
   app.delete('/api/sessions', requireUser, deleteSessionHandler);
 
   app.post('/api/games', cpUpload, requireUser, validate(createProductValidationSchema), createProductHandler);
+  app.get('/api/games/:id', requireUser, validate(getProductValidationSchema), getProductByIdHandler);
 }
 
 // helpers for multer

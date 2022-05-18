@@ -8,17 +8,8 @@ export async function createProduct(
   return await ProductModel.create(product);
 }
 
-export async function findProduct(
-  query: FilterQuery<ProductDocument>, //
-  options?: QueryOptions
-) {
-  return await ProductModel.findOne(query, {}, options);
-}
-
-export async function findProductById(id: number) {
-  return await findProduct({
-    _id: id
-  });
+export async function findProduct(query: FilterQuery<ProductDocument>) {
+  return await ProductModel.findOne(query).lean();
 }
 
 export async function searchProductsByName(term: string, limit: number, offset: number) {

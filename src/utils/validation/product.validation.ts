@@ -67,17 +67,13 @@ export const updateProductValidationSchema = object({
 });
 
 export const getProductValidationSchema = object({
-  body: object({
-    ...basicProductSchema,
-    logo: string({
-      required_error: 'Logo is required!'
-    }),
-    background: string({
-      required_error: 'Background is required!'
+  params: object({
+    id: string({
+      required_error: 'Id is required!'
     })
   })
 });
 
 export type CreateProductInput = TypeOf<typeof createProductValidationSchema>;
-export type UpdateUserInput = TypeOf<typeof updateProductValidationSchema>;
-export type GetUserInput = TypeOf<typeof getProductValidationSchema>;
+export type UpdateProductInput = TypeOf<typeof updateProductValidationSchema>;
+export type GetProductInput = TypeOf<typeof getProductValidationSchema>;
