@@ -9,11 +9,18 @@ import {
   findProducts,
   searchProductsByName,
   softDeleteProduct,
+  sortAndFilterGames,
   updateProduct
 } from '../services/product.service';
 import { GamesGenres, Platforms } from '../types/productTypes';
-import { CreateProductInput, SearchProductsInput, UpdateProductInput } from '../utils/validation/product.validation';
+import {
+  CreateProductInput,
+  ProductSelectionInput,
+  SearchProductsInput,
+  UpdateProductInput
+} from '../utils/validation/product.validation';
 import fs from 'fs';
+import { getGenreNameByValue, getPlatformNameByValue } from '../helpers/productHelpers';
 
 const prodErrMsgs = {
   productNotFound: 'Product not found'
@@ -106,15 +113,23 @@ export async function updateProductHandler(req: Request<{}, {}, UpdateProductInp
   await checkIsExist(id, res);
   const prod = await getProductDataHelper(req);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await updateProduct({ _id: id }, prod as any);
   } catch (err) {
     return res.status(404).send(err);
   }
 
   return res.send(prod);
+}
+
+export async function sortAndFilterGamesHandler(
+  req: Request<{}, {}, {}, ProductSelectionInput['query']>,
+  res: Response
+) {
+  const { limit, offset, filterType, filterValue, sortField, orderType } = req.query;
+  const result = await sortAndFilterGames(limit, offset, filterType, filterValue, sortField, orderType);
+  return res.send(result);
 }
 
 // helper functions --
@@ -143,13 +158,8 @@ async function checkIsExist(id: string, res: Response, isDeleted: boolean | unde
 }
 
 async function getProductDataHelper(req: Request<{}, {}, CreateProductInput['body'] | UpdateProductInput['body']>) {
-  const platformItem = enumToDescriptedArray(Platforms).filter(
-    (v) => v.value.toLowerCase() === req.body.platform.toLowerCase()
-  )[0];
-
-  const genreItem = enumToDescriptedArray(GamesGenres).filter(
-    (v) => v.value.toLowerCase() === req.body.genre.toLowerCase()
-  )[0];
+  const platformItem = getPlatformNameByValue(req.body.platform);
+  const genreItem = getGenreNameByValue(req.body.genre);
 
   //@ts-ignore
   const logoPath = req.files['logo'][0].path;

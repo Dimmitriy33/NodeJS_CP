@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import ProductModel, { ProductDocument } from '../models/product.model';
 import { DocumentDefinition, FilterQuery } from 'mongoose';
 import { QueryOptions } from 'winston';
+import { getGenreNameByValue } from '../helpers/productHelpers';
 
 export async function createProduct(
   product: DocumentDefinition<Omit<ProductDocument, 'createdAt' | 'updatedAt' | 'ratings' | 'ordersList'>>
@@ -60,4 +62,55 @@ export async function deleteProduct(id: number) {
 
 export async function softDeleteProduct(id: string) {
   return await ProductModel.findByIdAndUpdate(id, { isDeleted: true });
+}
+
+export async function sortAndFilterGames(
+  limit: number | null,
+  offset: number | null,
+  filterType?: string,
+  filterValue?: string,
+  sortField?: string,
+  orderType?: string
+) {
+  const products = await findProducts({
+    isDeleted: false
+  });
+
+  let filteredProducts = products;
+
+  if (filterType && filterValue) {
+    filteredProducts = filteredProducts.filter((product) => {
+      if (filterType === 'Genre') {
+        return product.genre === getGenreNameByValue(filterValue).key;
+      } else if (filterType === 'Age') {
+        // @ts-ignore
+        return product.rating === Number(filterValue);
+      }
+    });
+  }
+
+  if (sortField) {
+    filteredProducts = filteredProducts.sort((a, b) => {
+      // @ts-ignore
+      if (a[sortField] < b[sortField]) {
+        return orderType === 'asc' ? -1 : 1;
+      }
+
+      // @ts-ignore
+      if (a[sortField] > b[sortField]) {
+        return orderType === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
+  if (orderType === 'desc') {
+    filteredProducts.reverse();
+  }
+
+  const limitV = limit ? Number(limit) : filteredProducts.length;
+  const offsetV = offset ? Number(offset) : 0;
+  const result = filteredProducts.slice(offsetV, offsetV + limitV);
+
+  return result;
 }

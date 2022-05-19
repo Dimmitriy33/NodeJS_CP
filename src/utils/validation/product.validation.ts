@@ -1,5 +1,6 @@
 import { object, string, TypeOf, any } from 'zod';
 import { enumToKeysArray, enumToValuesArray } from '../../helpers/enumToArray';
+import { getNumberOrNull } from '../../helpers/getValueOrNull';
 import { GamesGenres, GamesRating, Platforms } from '../../types/productTypes';
 
 const basicProductSchema = {
@@ -95,7 +96,56 @@ export const searchProductsByNameSchema = object({
   })
 });
 
+export const productSelectionValidationSchema = object({
+  query: object({
+    filterType: string()
+      .optional()
+      .refine((v) => !v || ['Genre', 'Age'].includes(v), {
+        message: 'Filter type is not valid!'
+      }),
+
+    filterValue: string()
+      .optional()
+      .refine(
+        (v) =>
+          !v ||
+          (enumToKeysArray(GamesGenres) as string[]).map((g) => g.toLowerCase()).includes(v) ||
+          enumToValuesArray(GamesRating).includes(Number(v)),
+        {
+          message: 'Filter value is not valid!'
+        }
+      ),
+
+    sortField: string()
+      .optional()
+      .refine((v) => !v || ['Rating', 'Price'].includes(v), {
+        message: 'Sort field is not valid!'
+      }),
+
+    orderType: string()
+      .optional()
+      .refine((v) => !v || ['Asc', 'Desc'].includes(v), {
+        message: 'Order type is not valid!'
+      }),
+
+    limit: string()
+      .optional()
+      .transform((v) => getNumberOrNull(v))
+      .refine((v) => !v || (Number(v) > 0 && Number(v) < 1000), {
+        message: 'Limit must be greater than 0 and less than 1000!'
+      }),
+
+    offset: string()
+      .optional()
+      .transform((v) => getNumberOrNull(v))
+      .refine((v) => !v || (Number(v) > 0 && Number(v) < 100), {
+        message: 'Offset must be greater than 0 and less than 100!'
+      })
+  })
+});
+
 export type CreateProductInput = TypeOf<typeof createProductValidationSchema>;
 export type UpdateProductInput = TypeOf<typeof updateProductValidationSchema>;
 export type GetProductInput = TypeOf<typeof getProductValidationSchema>;
 export type SearchProductsInput = TypeOf<typeof searchProductsByNameSchema>;
+export type ProductSelectionInput = TypeOf<typeof productSelectionValidationSchema>;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Express, Request, Response } from 'express';
 import {
   createProductHandler,
@@ -5,6 +6,7 @@ import {
   getTopPopularPlatformsHandler,
   searchProductsByNameHandler,
   softDeleteProductHandler,
+  sortAndFilterGamesHandler,
   updateProductHandler
 } from './controllers/product.controller';
 import { createSessionHandler, deleteSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
@@ -21,7 +23,8 @@ import {
   createProductValidationSchema,
   getProductValidationSchema,
   searchProductsByNameSchema,
-  updateProductValidationSchema
+  updateProductValidationSchema,
+  productSelectionValidationSchema
 } from './utils/validation/product.validation';
 import { createSessionValidationSchema } from './utils/validation/session.validation';
 import {
@@ -46,10 +49,11 @@ export default function routes(app: Express): void {
   app.post('/api/sessions', validate(createSessionValidationSchema), createSessionHandler);
   app.delete('/api/sessions', requireUser, deleteSessionHandler);
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   app.get('/api/games/search', requireUser, validate(searchProductsByNameSchema), searchProductsByNameHandler);
   app.get('/api/games/top-platforms', requireUser, getTopPopularPlatformsHandler);
+  //@ts-ignore
+  app.get('/api/games/list', requireUser, validate(productSelectionValidationSchema), sortAndFilterGamesHandler);
   app.get('/api/games/:id', requireUser, validate(getProductValidationSchema), getProductByIdHandler);
   app.post(
     '/api/games',
