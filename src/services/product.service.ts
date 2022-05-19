@@ -4,7 +4,6 @@ import { DocumentDefinition, FilterQuery, QueryOptions } from 'mongoose';
 import { getGenreNameByValue } from '../helpers/productHelpers';
 import { getProductRatings } from './productRating.service';
 import { getAvgNumValue } from '../helpers/arrayHelpers';
-import { ObjectId } from 'mongodb';
 
 export async function createProduct(
   product: DocumentDefinition<Omit<ProductDocument, 'createdAt' | 'updatedAt' | 'ratings' | 'ordersList'>>

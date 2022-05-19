@@ -13,7 +13,7 @@ import {
   sortAndFilterGames,
   updateProduct
 } from '../services/product.service';
-import { GamesGenres, Platforms } from '../types/productTypes';
+import { Platforms } from '../types/productTypes';
 import {
   CreateProductInput,
   ProductRatingActionInput,
@@ -135,6 +135,21 @@ export async function sortAndFilterGamesHandler(
   return res.send(result);
 }
 
+export async function editRatingHandler(req: Request<{}, {}, ProductRatingActionInput['body']>, res: Response) {
+  const userId = res.locals.user._id;
+  const { productId, rating } = req.body;
+
+  await checkIsExist(productId, res);
+  const productRating = await createProductRating({
+    rating,
+    userId,
+    productId
+  });
+
+  await changeProductRating(productId);
+  return res.send(productRating);
+}
+
 // helper functions --
 async function checkIsExist(id: string, res: Response, isDeleted: boolean | undefined = undefined) {
   let query: {
@@ -183,19 +198,4 @@ async function getProductDataHelper(req: Request<{}, {}, CreateProductInput['bod
   };
 
   return prod;
-}
-
-export async function editRatingHandler(req: Request<{}, {}, ProductRatingActionInput['body']>, res: Response) {
-  const userId = res.locals.user._id;
-  const { productId, rating } = req.body;
-
-  await checkIsExist(productId, res);
-  const productRating = await createProductRating({
-    rating,
-    userId,
-    productId
-  });
-
-  await changeProductRating(productId);
-  return res.send(productRating);
 }
