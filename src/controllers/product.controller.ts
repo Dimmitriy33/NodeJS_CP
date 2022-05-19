@@ -105,7 +105,7 @@ export async function getTopPopularPlatformsHandler(req: Request<{}, {}, {}>, re
 export async function softDeleteProductHandler(req: Request<{ id: string }, {}, {}>, res: Response) {
   const id = req.params.id;
 
-  await checkIsExist(id, res, false);
+  await checkIsProductExist(id, res, false);
 
   await softDeleteProduct(id);
   return res.sendStatus(200);
@@ -113,7 +113,7 @@ export async function softDeleteProductHandler(req: Request<{ id: string }, {}, 
 
 export async function updateProductHandler(req: Request<{}, {}, UpdateProductInput['body']>, res: Response) {
   const id = req.body.id;
-  await checkIsExist(id, res);
+  await checkIsProductExist(id, res);
   const prod = await getProductDataHelper(req);
 
   try {
@@ -139,7 +139,7 @@ export async function editRatingHandler(req: Request<{}, {}, ProductRatingAction
   const userId = res.locals.user._id;
   const { productId, rating } = req.body;
 
-  await checkIsExist(productId, res);
+  await checkIsProductExist(productId, res);
   const productRating = await createProductRating({
     rating,
     userId,
@@ -151,7 +151,7 @@ export async function editRatingHandler(req: Request<{}, {}, ProductRatingAction
 }
 
 // helper functions --
-async function checkIsExist(id: string, res: Response, isDeleted: boolean | undefined = undefined) {
+export async function checkIsProductExist(id: string, res: Response, isDeleted: boolean | undefined = undefined) {
   let query: {
     _id: string;
     isDeleted?: boolean;
