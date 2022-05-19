@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { enumToDescriptedArray } from '../helpers/enumToArray';
 import { CloudinaryApi } from '../services/cloudinary.service';
 import {
+  changeProductRating,
   createProduct,
   findProduct,
   findProducts,
@@ -15,12 +16,14 @@ import {
 import { GamesGenres, Platforms } from '../types/productTypes';
 import {
   CreateProductInput,
+  ProductRatingActionInput,
   ProductSelectionInput,
   SearchProductsInput,
   UpdateProductInput
 } from '../utils/validation/product.validation';
 import fs from 'fs';
 import { getGenreNameByValue, getPlatformNameByValue } from '../helpers/productHelpers';
+import { createProductRating } from '../services/productRating.service';
 
 const prodErrMsgs = {
   productNotFound: 'Product not found'
@@ -180,4 +183,19 @@ async function getProductDataHelper(req: Request<{}, {}, CreateProductInput['bod
   };
 
   return prod;
+}
+
+export async function editRatingHandler(req: Request<{}, {}, ProductRatingActionInput['body']>, res: Response) {
+  const userId = res.locals.user._id;
+  const { productId, rating } = req.body;
+
+  await checkIsExist(productId, res);
+  const productRating = await createProductRating({
+    rating,
+    userId,
+    productId
+  });
+
+  await changeProductRating(productId);
+  return res.send(productRating);
 }

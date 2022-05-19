@@ -7,7 +7,8 @@ import {
   searchProductsByNameHandler,
   softDeleteProductHandler,
   sortAndFilterGamesHandler,
-  updateProductHandler
+  updateProductHandler,
+  editRatingHandler
 } from './controllers/product.controller';
 import { createSessionHandler, deleteSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
 import {
@@ -24,7 +25,8 @@ import {
   getProductValidationSchema,
   searchProductsByNameSchema,
   updateProductValidationSchema,
-  productSelectionValidationSchema
+  productSelectionValidationSchema,
+  productRatingActionValidationSchema
 } from './utils/validation/product.validation';
 import { createSessionValidationSchema } from './utils/validation/session.validation';
 import {
@@ -62,6 +64,7 @@ export default function routes(app: Express): void {
     validate(createProductValidationSchema),
     createProductHandler
   );
+  app.post('/api/games/rating', requireUser, validate(productRatingActionValidationSchema), editRatingHandler);
   app.put(
     '/api/games',
     productFilesUpload,

@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import ProductModel, { ProductDocument } from '../models/product.model';
-import { DocumentDefinition, FilterQuery } from 'mongoose';
-import { QueryOptions } from 'winston';
+import { DocumentDefinition, FilterQuery, QueryOptions } from 'mongoose';
 import { getGenreNameByValue } from '../helpers/productHelpers';
+import { getProductRatings } from './productRating.service';
+import { getAvgNumValue } from '../helpers/arrayHelpers';
+import { ObjectId } from 'mongodb';
 
 export async function createProduct(
   product: DocumentDefinition<Omit<ProductDocument, 'createdAt' | 'updatedAt' | 'ratings' | 'ordersList'>>
@@ -113,4 +115,14 @@ export async function sortAndFilterGames(
   const result = filteredProducts.slice(offsetV, offsetV + limitV);
 
   return result;
+}
+
+export async function changeProductRating(id: string) {
+  const prRatings = await getProductRatings({});
+  const elRatings = prRatings.filter((pr) => pr.productId.toString() === id).map((p) => p.rating);
+  console.log(elRatings);
+  const newRating = getAvgNumValue(elRatings) || 0;
+
+  //@ts-ignore
+  return await updateProduct({ _id: id }, { rating: newRating });
 }

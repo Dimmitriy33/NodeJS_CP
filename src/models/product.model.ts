@@ -11,6 +11,7 @@ export interface ProductDocument extends mongoose.Document {
   updatedAt: Date; // related to timestamps
   totalRating: number;
   genre: number;
+  rating: number;
   logo: string;
   background: string;
   price: number;

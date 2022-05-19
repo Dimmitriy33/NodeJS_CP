@@ -1,4 +1,4 @@
-import { object, string, TypeOf, any } from 'zod';
+import { object, string, TypeOf, any, number } from 'zod';
 import { enumToKeysArray, enumToValuesArray } from '../../helpers/enumToArray';
 import { getNumberOrNull } from '../../helpers/getValueOrNull';
 import { GamesGenres, GamesRating, Platforms } from '../../types/productTypes';
@@ -144,8 +144,21 @@ export const productSelectionValidationSchema = object({
   })
 });
 
+export const productRatingActionValidationSchema = object({
+  body: object({
+    productId: string({
+      required_error: 'Product id is required!'
+    }),
+
+    rating: number({
+      required_error: 'Rating is required!'
+    })
+  })
+});
+
 export type CreateProductInput = TypeOf<typeof createProductValidationSchema>;
 export type UpdateProductInput = TypeOf<typeof updateProductValidationSchema>;
 export type GetProductInput = TypeOf<typeof getProductValidationSchema>;
 export type SearchProductsInput = TypeOf<typeof searchProductsByNameSchema>;
 export type ProductSelectionInput = TypeOf<typeof productSelectionValidationSchema>;
+export type ProductRatingActionInput = TypeOf<typeof productRatingActionValidationSchema>;
