@@ -12,9 +12,9 @@ export const createUserValidationSchema = object({
       required_error: 'Password is required!'
     }).min(6, 'Password must have at least 6 characters!'),
 
-    passwordConfirmation: string({
-      required_error: 'Password confirmation is required!'
-    }),
+    // passwordConfirmation: string({
+    //   required_error: 'Password confirmation is required!'
+    // }),
 
     email: string({
       required_error: 'Email is required!'
@@ -27,10 +27,11 @@ export const createUserValidationSchema = object({
     addressDelivery: string({
       required_error: 'Address delivery is required!'
     })
-  }).refine((data) => data.password === data.passwordConfirmation, {
-    message: 'Password and confirmPassword do not match',
-    path: ['passwordConfirmation']
   })
+  // .refine((data) => data.password === data.passwordConfirmation, {
+  //   message: 'Password and confirmPassword do not match',
+  //   path: ['passwordConfirmation']
+  // })
 });
 
 export const updateUserValidationSchema = object({
