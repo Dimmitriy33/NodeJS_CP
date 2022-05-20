@@ -6,12 +6,14 @@ import resMappper from './middleware/resMapper';
 import routes from './routes';
 import connectDb from './utils/connect';
 import Logger from './utils/logger';
+import reqMappper from './middleware/reqMapper';
 
 const port = config.get<number>('port');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(reqMappper);
 app.use(deserializeUser);
 app.use(resMappper);
 
