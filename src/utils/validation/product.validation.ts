@@ -23,7 +23,7 @@ const basicProductSchema = {
 
   genre: string({
     required_error: 'Genre is required!'
-  }).refine((v) => (enumToKeysArray(GamesGenres) as string[]).map((g) => g.toLowerCase()).includes(v), {
+  }).refine((v) => (enumToKeysArray(GamesGenres) as string[]).map((g) => g.toLowerCase()).includes(v.toLowerCase()), {
     message: 'Genre is not valid!'
   }),
 
@@ -60,9 +60,9 @@ export const updateProductValidationSchema = object({
     id: string({
       required_error: 'Id is required!'
     }),
-    isDeleted: string({
-      required_error: 'Is deleted is required!'
-    }).transform((v) => Boolean(v))
+    isDeleted: string()
+      .optional()
+      .transform((v) => (v != null ? Boolean(v) : undefined))
   })
 });
 
@@ -109,7 +109,7 @@ export const productSelectionValidationSchema = object({
       .refine(
         (v) =>
           !v ||
-          (enumToKeysArray(GamesGenres) as string[]).map((g) => g.toLowerCase()).includes(v) ||
+          (enumToKeysArray(GamesGenres) as string[]).map((g) => g.toLowerCase()).includes(v.toLowerCase()) ||
           enumToValuesArray(GamesRating).includes(Number(v)),
         {
           message: 'Filter value is not valid!'
