@@ -6,6 +6,7 @@ import { CloudinaryApi } from '../services/cloudinary.service';
 import {
   changeProductRating,
   createProduct,
+  deleteProduct,
   findProduct,
   findProducts,
   searchProductsByName,
@@ -108,6 +109,15 @@ export async function softDeleteProductHandler(req: Request<{ id: string }, {}, 
   await checkIsProductExist(id, res, false);
 
   await softDeleteProduct(id);
+  return res.sendStatus(200);
+}
+
+export async function hardDeleteProductHandler(req: Request<{ id: string }, {}, {}>, res: Response) {
+  const id = req.params.id;
+
+  await checkIsProductExist(id, res, false);
+
+  await deleteProduct(id);
   return res.sendStatus(200);
 }
 

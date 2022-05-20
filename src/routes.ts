@@ -8,7 +8,8 @@ import {
   softDeleteProductHandler,
   sortAndFilterGamesHandler,
   updateProductHandler,
-  editRatingHandler
+  editRatingHandler,
+  hardDeleteProductHandler
 } from './controllers/product.controller';
 import { createSessionHandler, deleteSessionHandler, getUserSessionsHandler } from './controllers/session.controller';
 import {
@@ -81,6 +82,7 @@ export default function routes(app: Express): void {
     updateProductHandler
   );
   app.delete('/api/games/soft-remove/id/:id', requireUserWithAdminRole, softDeleteProductHandler);
+  app.delete('/api/games/id/:id', requireUserWithAdminRole, hardDeleteProductHandler);
 
   //@ts-ignore
   app.get('/api/orders', requireUser, validate(orderListValidationSchema), getOrderListHandler);

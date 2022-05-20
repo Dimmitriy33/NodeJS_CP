@@ -1,5 +1,5 @@
 import OrderModel, { OrderDocument } from '../models/order.model';
-import { DocumentDefinition, FilterQuery, QueryOptions } from 'mongoose';
+import { DocumentDefinition } from 'mongoose';
 import { OrderStatus } from '../types/orderTypes';
 
 export async function createOrderItem(orderItem: DocumentDefinition<Omit<OrderDocument, 'createdAt' | 'updatedAt'>>) {

@@ -57,7 +57,7 @@ export async function updateProduct(
   return await ProductModel.findOneAndUpdate(query, update, options);
 }
 
-export async function deleteProduct(id: number) {
+export async function deleteProduct(id: string) {
   return await ProductModel.findByIdAndDelete(id);
 }
 
@@ -119,7 +119,6 @@ export async function sortAndFilterGames(
 export async function changeProductRating(id: string) {
   const prRatings = await getProductRatings({});
   const elRatings = prRatings.filter((pr) => pr.productId.toString() === id).map((p) => p.rating);
-  console.log(elRatings);
   const newRating = getAvgNumValue(elRatings) || 0;
 
   //@ts-ignore
