@@ -1,9 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Request, Response } from 'express';
-import { createOrderItems, findOrderItemsByOrdersId, findOrderItemsByUserId } from '../services/order.service';
+import {
+  changeOrderItemsStatus,
+  createOrderItems,
+  deleteOrderItems,
+  findOrderItemsByOrdersId,
+  findOrderItemsByUserId
+} from '../services/order.service';
 import { findProduct } from '../services/product.service';
 import { OrderStatus } from '../types/orderTypes';
-import { AddProdToOrderInput, GetOrderListInput } from '../utils/validation/order.validation';
+import { AddProdToOrderInput, OrderListInput } from '../utils/validation/order.validation';
 
 const orderErrMsgs = {
   productNotFound: 'Product not found',
@@ -44,7 +50,7 @@ export async function addProductsToOrderHandler(req: Request<{}, {}, AddProdToOr
   return res.sendStatus(200);
 }
 
-export async function getOrderListHandler(req: Request<{}, {}, {}, GetOrderListInput['query']>, res: Response) {
+export async function getOrderListHandler(req: Request<{}, {}, {}, OrderListInput['query']>, res: Response) {
   const data = req.query.orderList;
 
   if (!data) {
@@ -54,5 +60,27 @@ export async function getOrderListHandler(req: Request<{}, {}, {}, GetOrderListI
   }
 
   const result = await findOrderItemsByOrdersId(Array.isArray(data) ? data : [data]);
+  return res.send(result);
+}
+
+export async function softRemoveOrdersHandler(req: Request<{}, {}, {}, OrderListInput['query']>, res: Response) {
+  const data = req.query.orderList;
+
+  if (!data) {
+    return res.sendStatus(400);
+  }
+
+  const result = await changeOrderItemsStatus(Array.isArray(data) ? data : [data], OrderStatus.Rejected);
+  return res.send(result);
+}
+
+export async function hardRemoveOrdersHandler(req: Request<{}, {}, {}, OrderListInput['query']>, res: Response) {
+  const data = req.query.orderList;
+
+  if (!data) {
+    return res.sendStatus(400);
+  }
+
+  const result = await deleteOrderItems(Array.isArray(data) ? data : [data]);
   return res.send(result);
 }

@@ -34,9 +34,14 @@ import {
   updateUserValidationSchema,
   resetPassUserValidationSchema
 } from './utils/validation/user.validation';
-import { addProductsToOrderValidationSchema, getOrderListValidationSchema } from './utils/validation/order.validation';
+import { addProductsToOrderValidationSchema, orderListValidationSchema } from './utils/validation/order.validation';
 import upload from './utils/multerConfig';
-import { addProductsToOrderHandler, getOrderListHandler } from './controllers/order.controller';
+import {
+  addProductsToOrderHandler,
+  getOrderListHandler,
+  hardRemoveOrdersHandler,
+  softRemoveOrdersHandler
+} from './controllers/order.controller';
 
 export default function routes(app: Express): void {
   app.get('/testAPI', (req: Request, res: Response) => {
@@ -77,8 +82,10 @@ export default function routes(app: Express): void {
   app.delete('/api/games/soft-remove/id/:id', requireUserWithAdminRole, softDeleteProductHandler);
 
   //@ts-ignore
-  app.get('/api/orders', requireUser, validate(getOrderListValidationSchema), getOrderListHandler);
+  app.get('/api/orders', requireUser, validate(orderListValidationSchema), getOrderListHandler);
   app.post('/api/orders', requireUser, validate(addProductsToOrderValidationSchema), addProductsToOrderHandler);
+  app.delete('/api/orders', requireUser, validate(orderListValidationSchema), hardRemoveOrdersHandler);
+  app.delete('/api/orders/soft', requireUser, validate(orderListValidationSchema), softRemoveOrdersHandler);
 }
 
 // helpers for multer
