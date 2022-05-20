@@ -84,3 +84,13 @@ export async function hardRemoveOrdersHandler(req: Request<{}, {}, {}, OrderList
   const result = await deleteOrderItems(Array.isArray(data) ? data : [data]);
   return res.send(result);
 }
+
+export async function buySelectedProductsHandler(req: Request<{}, {}, {}, OrderListInput['query']>, res: Response) {
+  const data = req.query.orderList;
+  if (!data) {
+    return res.sendStatus(400);
+  }
+
+  const result = await changeOrderItemsStatus(Array.isArray(data) ? data : [data], OrderStatus.Paid);
+  return res.send(result);
+}
