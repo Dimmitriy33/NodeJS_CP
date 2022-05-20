@@ -22,7 +22,7 @@ export const createUserValidationSchema = object({
 
     phoneNumber: string({
       required_error: 'Phone number is required!'
-    }).regex(/\d{3}-\d{3}-\d{4}/, 'Not a valid phone number!'),
+    }).regex(/^\+?[0-9]{10,15}$/, 'Phone number is not valid!'),
 
     addressDelivery: string({
       required_error: 'Address delivery is required!'
