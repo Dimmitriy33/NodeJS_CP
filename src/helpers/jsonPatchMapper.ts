@@ -7,7 +7,7 @@ export const simpleMapPatch = (patch: Array<any>) => {
     const pathArr = path.split('/');
     const key = pathArr.pop();
 
-    result[key] = value;
+    result[key.toLowerCase()] = value;
   });
 
   return result;
