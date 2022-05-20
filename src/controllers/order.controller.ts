@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Request, Response } from 'express';
-import { createOrderItems } from '../services/order.service';
+import { createOrderItems, findOrderItemsByOrdersId, findOrderItemsByUserId } from '../services/order.service';
 import { findProduct } from '../services/product.service';
 import { OrderStatus } from '../types/orderTypes';
-import { AddProdToOrderInput } from '../utils/validation/order.validation';
-import { checkIsProductExist } from './product.controller';
+import { AddProdToOrderInput, GetOrderListInput } from '../utils/validation/order.validation';
 
 const orderErrMsgs = {
   productNotFound: 'Product not found',
@@ -43,4 +42,17 @@ export async function addProductsToOrderHandler(req: Request<{}, {}, AddProdToOr
 
   await createOrderItems(orderItems);
   return res.sendStatus(200);
+}
+
+export async function getOrderListHandler(req: Request<{}, {}, {}, GetOrderListInput['query']>, res: Response) {
+  const data = req.query.orderList;
+
+  if (!data) {
+    const userId = res.locals.user._id;
+    const result = await findOrderItemsByUserId(userId);
+    return res.send(result);
+  }
+
+  const result = await findOrderItemsByOrdersId(Array.isArray(data) ? data : [data]);
+  return res.send(result);
 }

@@ -10,3 +10,11 @@ export async function createOrderItems(
 ) {
   return await OrderModel.insertMany(orderItems);
 }
+
+export async function findOrderItemsByOrdersId(items: string[]) {
+  return await OrderModel.find({ _id: { $in: items } }).lean();
+}
+
+export async function findOrderItemsByUserId(userId: string) {
+  return await OrderModel.find({ userId }).lean();
+}

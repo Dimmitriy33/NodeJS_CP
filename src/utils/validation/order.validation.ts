@@ -14,4 +14,11 @@ export const addProductsToOrderValidationSchema = object({
   )
 });
 
+export const getOrderListValidationSchema = object({
+  query: object({
+    orderList: array(string()).or(string()).optional()
+  })
+});
+
 export type AddProdToOrderInput = TypeOf<typeof addProductsToOrderValidationSchema>;
+export type GetOrderListInput = TypeOf<typeof getOrderListValidationSchema>;
