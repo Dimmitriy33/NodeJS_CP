@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import ProductModel, { ProductDocument } from '../models/product.model';
 import { DocumentDefinition, FilterQuery, QueryOptions } from 'mongoose';
-import { getGenreNameByValue } from '../helpers/productHelpers';
+import { getGenreNameByValue, getPlatformNameByValue } from '../helpers/productHelpers';
 import { getProductRatings } from './productRating.service';
 import { getAvgNumValue } from '../helpers/arrayHelpers';
+import { GamesGenres, Platforms } from '../types/productTypes';
 
 export async function createProduct(
   product: DocumentDefinition<Omit<ProductDocument, 'createdAt' | 'updatedAt' | 'ratings' | 'ordersList'>>
@@ -113,7 +114,11 @@ export async function sortAndFilterGames(
   const offsetV = offset ? Number(offset) : 0;
   const result = filteredProducts.slice(offsetV, offsetV + limitV);
 
-  return result;
+  return result.map((r) => ({
+    ...r,
+    platform: Platforms[r.platform],
+    genre: GamesGenres[r.genre]
+  }));
 }
 
 export async function changeProductRating(id: string) {
