@@ -23,6 +23,5 @@ export function objKeysToFirstLetterLowerCase(obj: object) {
     //@ts-ignore
     return { [key.charAt(0).toLowerCase() + key.slice(1)]: obj[key] };
   });
-  console.log(keyValues);
   return Object.assign({}, ...keyValues);
 }

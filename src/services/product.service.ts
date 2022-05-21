@@ -93,20 +93,21 @@ export async function sortAndFilterGames(
 
   if (sortField) {
     filteredProducts = filteredProducts.sort((a, b) => {
+      const sortFLower = sortField.charAt(0).toLowerCase() + sortField.slice(1);
       // @ts-ignore
-      if (a[sortField] < b[sortField]) {
+      if (a[sortField] < b[sortField] || a[sortFLower] < b[sortFLower]) {
         return orderType === 'asc' ? -1 : 1;
       }
 
       // @ts-ignore
-      if (a[sortField] > b[sortField]) {
+      if (a[sortField] > b[sortField] || a[sortFLower] > b[sortFLower]) {
         return orderType === 'asc' ? 1 : -1;
       }
       return 0;
     });
   }
 
-  if (orderType === 'desc') {
+  if (orderType?.toLowerCase() === 'desc') {
     filteredProducts.reverse();
   }
 
