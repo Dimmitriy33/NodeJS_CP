@@ -118,7 +118,7 @@ export const productSelectionValidationSchema = object({
 
     sortField: string()
       .optional()
-      .refine((v) => !v || ['Rating', 'Price'].includes(v), {
+      .refine((v) => !v || ['Rating', 'Price', 'Name'].includes(v), {
         message: 'Sort field is not valid!'
       }),
 
