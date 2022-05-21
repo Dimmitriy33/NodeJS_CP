@@ -17,3 +17,12 @@ export function objKeysToLowerCase(obj: object) {
 
   return Object.assign({}, ...keyValues);
 }
+
+export function objKeysToFirstLetterLowerCase(obj: object) {
+  const keyValues = Object.keys(obj).map((key) => {
+    //@ts-ignore
+    return { [key.charAt(0).toLowerCase() + key.slice(1)]: obj[key] };
+  });
+  console.log(keyValues);
+  return Object.assign({}, ...keyValues);
+}
