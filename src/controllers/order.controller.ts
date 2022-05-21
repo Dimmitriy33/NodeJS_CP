@@ -39,12 +39,31 @@ export async function addProductsToOrderHandler(req: Request<{}, {}, AddProdToOr
     }
   }
 
-  const orderItems = reqOrderItems.map((item) => ({
-    productId: item.productId,
-    amount: item.amount,
-    userId: userId,
-    status: OrderStatus.Unpaid
-  }));
+  const orderItems: {
+    productId: string;
+    amount: number;
+    userId: string;
+    status: OrderStatus;
+  }[] = [];
+
+  for (let idx = 0; idx < reqOrderItems.length; idx++) {
+    const el = reqOrderItems[idx];
+    orderItems.push({
+      productId: el.productId,
+      amount: el.amount,
+      userId,
+      status: OrderStatus.Unpaid
+    });
+  }
+
+  // const orderItems = reqOrderItems.map((item) => {
+  //   return {
+  //     productId: item.productId,
+  //     amount: item.amount,
+  //     userId: userId,
+  //     status: OrderStatus.Unpaid
+  //   };
+  // });
 
   await createOrderItems(orderItems);
   return res.sendStatus(200);

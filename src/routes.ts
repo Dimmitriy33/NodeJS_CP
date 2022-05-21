@@ -87,7 +87,7 @@ export default function routes(app: Express): void {
   //@ts-ignore
   app.get('/api/orders', requireUser, validate(orderListValidationSchema), getOrderListHandler);
   app.post('/api/orders/buy', requireUser, validate(orderListValidationSchema), buySelectedProductsHandler);
-  app.post('/api/orders', requireUser, validate(addProductsToOrderValidationSchema), addProductsToOrderHandler);
+  app.post('/api/orders', requireUser, /*validate(addProductsToOrderValidationSchema), */ addProductsToOrderHandler);
   app.delete('/api/orders/soft', requireUser, validate(orderListValidationSchema), softRemoveOrdersHandler);
   app.delete('/api/orders', requireUser, validate(orderListValidationSchema), hardRemoveOrdersHandler);
 }
