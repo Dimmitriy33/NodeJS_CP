@@ -60,10 +60,8 @@ export default function routes(app: Express): void {
   app.post('/api/sessions', validate(createSessionValidationSchema), createSessionHandler);
   app.delete('/api/sessions', requireUser, deleteSessionHandler);
 
-  //@ts-ignore
   app.get('/api/games/search', validate(searchProductsByNameSchema), searchProductsByNameHandler);
   app.get('/api/games/top-platforms', getTopPopularPlatformsHandler);
-  //@ts-ignore
   app.get('/api/games/list', validate(productSelectionValidationSchema), sortAndFilterGamesHandler);
   app.get('/api/games/:id', validate(getProductValidationSchema), getProductByIdHandler);
   app.post(
@@ -84,7 +82,6 @@ export default function routes(app: Express): void {
   app.delete('/api/games/soft-remove/id/:id', requireUserWithAdminRole, softDeleteProductHandler);
   app.delete('/api/games/id/:id', requireUserWithAdminRole, hardDeleteProductHandler);
 
-  //@ts-ignore
   app.get('/api/orders', requireUser, validate(orderListValidationSchema), getOrderListHandler);
   app.post('/api/orders/buy', requireUser, validate(orderListValidationSchema), buySelectedProductsHandler);
   app.post('/api/orders', requireUser, /*validate(addProductsToOrderValidationSchema), */ addProductsToOrderHandler);

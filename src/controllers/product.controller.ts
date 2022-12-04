@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/ban-types */
 import { Request, Response } from 'express';
@@ -55,11 +56,8 @@ export async function getProductByIdHandler(req: Request<{ id: string }, {}, {}>
   return res.send(product);
 }
 
-export async function searchProductsByNameHandler(
-  req: Request<{}, {}, {}, SearchProductsInput['query']>,
-  res: Response
-) {
-  const { term, limit, offset } = req.query;
+export async function searchProductsByNameHandler(req: Request<{}, {}, {}, unknown>, res: Response) {
+  const { term, limit, offset } = req.query as SearchProductsInput['query'];
   const products = await searchProductsByName(term as string, limit, offset);
 
   return res.send(products);
@@ -136,11 +134,8 @@ export async function updateProductHandler(req: Request<{}, {}, UpdateProductInp
   return res.send(prod);
 }
 
-export async function sortAndFilterGamesHandler(
-  req: Request<{}, {}, {}, ProductSelectionInput['query']>,
-  res: Response
-) {
-  const { limit, offset, filterType, filterValue, sortField, orderType } = req.query;
+export async function sortAndFilterGamesHandler(req: Request<{}, {}, {}, unknown>, res: Response) {
+  const { limit, offset, filterType, filterValue, sortField, orderType } = req.query as ProductSelectionInput['query'];
   const result = await sortAndFilterGames(limit, offset, filterType, filterValue, sortField, orderType);
   return res.send(result);
 }
@@ -189,10 +184,8 @@ async function getProductDataHelper(req: Request<{}, {}, CreateProductInput['bod
   const platformItem = getPlatformNameByValue(req.body.platform);
   const genreItem = getGenreNameByValue(req.body.genre);
 
-  //@ts-ignore
-  const logoPath = req.files['logo'][0].path;
-  //@ts-ignore
-  const backPath = req.files['background'][0].path;
+  const logoPath = (req.files as any)['logo'][0].path;
+  const backPath = (req.files as any)['background'][0].path;
 
   const logo = await CloudinaryApi.upload(logoPath);
   const background = await CloudinaryApi.upload(backPath);

@@ -15,6 +15,7 @@ export interface ProductDocument extends mongoose.Document {
   logo: string;
   background: string;
   price: number;
+  amount?: number;
   count: number;
   isDeleted: boolean;
   ratings?: ProductRatingDocument['_id'];

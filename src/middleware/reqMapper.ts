@@ -5,7 +5,6 @@ import { objKeysToFirstLetterLowerCase } from '../helpers/renameObjKeys';
 
 export default function reqMappper(req: Request, res: Response, next: NextFunction) {
   req.query = new Proxy(req.query, {
-    //@ts-ignore
     get: (target, name) =>
       target[
         //@ts-ignore
@@ -16,11 +15,6 @@ export default function reqMappper(req: Request, res: Response, next: NextFuncti
         })
       ]
   });
-
-  // req.body = new Proxy(req.body, {
-  //   //@ts-ignore
-  //   get: (target, name) => target[Object.keys(target).find((key) => key.toLowerCase() === name.toLowerCase())]
-  // });
 
   if (Array.isArray(req.body)) {
     req.body = req.body.map((item) => objKeysToFirstLetterLowerCase(item));

@@ -32,9 +32,7 @@ export async function addProductsToOrderHandler(req: Request<{}, {}, AddProdToOr
       return res.status(404).send({ message: orderErrMsgs.productNotFound });
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    if (el.amount > p.amount) {
+    if (p.amount && el.amount > p.amount) {
       return res.status(400).send({ message: orderErrMsgs.notEnougnProducts });
     }
   }

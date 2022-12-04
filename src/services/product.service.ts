@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import ProductModel, { ProductDocument } from '../models/product.model';
 import { DocumentDefinition, FilterQuery, QueryOptions } from 'mongoose';
-import { getGenreNameByValue, getPlatformNameByValue } from '../helpers/productHelpers';
+import { getGenreNameByValue } from '../helpers/productHelpers';
 import { getProductRatings } from './productRating.service';
 import { getAvgNumValue } from '../helpers/arrayHelpers';
 import { GamesGenres, Platforms } from '../types/productTypes';
@@ -85,21 +86,18 @@ export async function sortAndFilterGames(
       if (filterType === 'Genre') {
         return product.genre === getGenreNameByValue(filterValue).key;
       } else if (filterType === 'Age') {
-        // @ts-ignore
         return product.rating === Number(filterValue);
       }
     });
   }
 
   if (sortField) {
-    filteredProducts = filteredProducts.sort((a, b) => {
+    filteredProducts = filteredProducts.sort((a: any, b: any) => {
       const sortFLower = sortField.charAt(0).toLowerCase() + sortField.slice(1);
-      // @ts-ignore
-      if (a[sortField] < b[sortField] || a[sortFLower] < b[sortFLower]) {
+      if (sortField && (a[sortField] < b[sortField] || a[sortFLower] < b[sortFLower])) {
         return orderType === 'asc' ? -1 : 1;
       }
 
-      // @ts-ignore
       if (a[sortField] > b[sortField] || a[sortFLower] > b[sortFLower]) {
         return orderType === 'asc' ? 1 : -1;
       }
@@ -127,6 +125,5 @@ export async function changeProductRating(id: string) {
   const elRatings = prRatings.filter((pr) => pr.productId.toString() === id).map((p) => p.rating);
   const newRating = getAvgNumValue(elRatings) || 0;
 
-  //@ts-ignore
-  return await updateProduct({ _id: id }, { rating: newRating });
+  return await updateProduct({ _id: id }, { rating: newRating } as Omit<ProductDocument, 'createdAt' | 'updatedAt'>);
 }
